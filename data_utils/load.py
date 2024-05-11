@@ -2,7 +2,7 @@ import os
 import json
 import torch
 import csv
-from dataset import CustomDGLDataset
+from . import CustomDGLDataset
 
 
 def load_gpt_preds(dataset, topk):
@@ -25,7 +25,7 @@ def load_gpt_preds(dataset, topk):
 
 def load_data(dataset, use_dgl=False, use_text=False, seed=0):
     if dataset == 'cora':
-        from load_cora import get_raw_text_cora as get_raw_text
+        from . import get_raw_text_cora as get_raw_text
         num_classes = 7
     # elif dataset == 'pubmed':
     #     from core.data_utils.load_pubmed import get_raw_text_pubmed as get_raw_text
