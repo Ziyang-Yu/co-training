@@ -17,3 +17,4 @@ Epoch 00159 | Accuracy 94.13%
 Epoch 00169 | Accuracy 94.21%
 Epoch 00179 | Accuracy 94.28%
 Epoch 00189 | Accuracy 94.39%
+Epoch 00009 | Accuracy 20.47%
