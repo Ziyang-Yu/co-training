@@ -3,6 +3,7 @@ import torch.nn.functional as F
 from torch_geometric.nn import GCNConv
 from torch_geometric.datasets import Planetoid
 from torch_geometric.data import DataLoader
+from torch_geometric.loader import NodeLoader, NeighborLoader
 from torch_geometric.data import InMemoryDataset
 
 from data_utils import load_data
@@ -50,6 +51,7 @@ class deberta:
 
 
 class GCN(torch.nn.Module):
+
     def __init__(self, num_node_features, num_classes):
         super(GCN, self).__init__()
         self.conv1 = GCNConv(num_node_features, 16)
@@ -65,31 +67,31 @@ class GCN(torch.nn.Module):
 
         return F.log_softmax(x, dim=1)
     
-class dataset:
+# class dataset:
 
-    def __init__(self, name) -> None:
+#     def __init__(self, name) -> None:
 
-        if name == 'cora':
+#         if name == 'cora':
 
-            # self.data = Planetoid(root='/tmp/Cora', name='Cora', split='random')
-            data, num_classes, text = load_data('cora', use_dgl=True, use_text=True)
-            self.num_classes = num_classes
-            self.text = text
-            self.y = data.y
-            self.train_mask = data.train_mask
-            self.val_mask = data.val_mask
-            self.test_mask = data.test_mask
-            self.edge_index = data.edge_index
-        else:
-            raise NotImplementedError
+#             # self.data = Planetoid(root='/tmp/Cora', name='Cora', split='random')
+#             data, num_classes, text = load_data('cora', use_dgl=True, use_text=True)
+#             self.num_classes = num_classes
+#             self.text = text
+#             self.y = data.y
+#             self.train_mask = data.train_mask
+#             self.val_mask = data.val_mask
+#             self.test_mask = data.test_mask
+#             self.edge_index = data.edge_index
+#         else:
+#             raise NotImplementedError
         
-    def to(self, device):
-        self.y = self.y.to(device)
-        self.train_mask = self.train_mask.to(device)
-        self.val_mask = self.val_mask.to(device)
-        self.test_mask = self.test_mask.to(device)
-        self.edge_index = self.edge_index.to(device)
-        return self
+#     def to(self, device):
+#         self.y = self.y.to(device)
+#         self.train_mask = self.train_mask.to(device)
+#         self.val_mask = self.val_mask.to(device)
+#         self.test_mask = self.test_mask.to(device)
+#         self.edge_index = self.edge_index.to(device)
+#         return self
 
         
     # def update(self, x):
@@ -102,15 +104,35 @@ class dataset:
 
 if __name__ == '__main__':
 
-    # data, num_classes, text = load_data('cora', use_dgl=True, use_text=True)
-    data = dataset('cora').to('cuda')
+    
+
+    dataset, num_classes, text = load_data('cora', use_dgl=True, use_text=True)
+    # print(type(dataset))
+    dataset = Planetoid(root='data/Planetoid', name='Cora')[0]
+    loader = NeighborLoader(
+        dataset,
+        # Sample 30 neighbors for each node for 2 iterations
+        num_neighbors=[5]*10,
+        # Use a batch size of 128 for sampling training nodes
+        batch_size=64,
+        input_nodes=dataset.train_mask,
+    )
+    for data in loader:
+        print(data)
+
+    # # loader = NodeLoader(dataset, batch_size=32, shuffle=True)
+    # loader = NeighborLoader(dataset, num_neighbors=[15, 10], batch_size=32, shuffle=True)
+
+    # # Iterate through the DataLoader
+    # for data in loader:
+    #     print(data)
 
 
-    lm = deberta().to('cuda')
-    gcn = GCN(num_node_features=lm.num_node_features, num_classes=data.num_classes).to('cuda')
-    with torch.no_grad():
-        data = lm(data)
-        data = gcn(data)
+    # lm = deberta().to('cuda')
+    # gcn = GCN(num_node_features=lm.num_node_features, num_classes=data.num_classes).to('cuda')
+    # with torch.no_grad():
+    #     data = lm(data)
+    #     data = gcn(data)
     # print(lm(dataset).x.shape)
     # gcn = GCN(num_node_features=lm.num_node_features, num_classes=dataset.num_classes)
 

@@ -4,3 +4,4 @@ __pycache__/
 cora_orig/
 env/
 .vscode/
+data/
