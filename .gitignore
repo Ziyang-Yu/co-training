@@ -2,3 +2,5 @@ cora_orig.zip
 dataset/
 __pycache__/
 cora_orig/
+env/
+.vscode/
