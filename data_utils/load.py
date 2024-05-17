@@ -2,6 +2,8 @@ import os
 import json
 import torch
 import csv
+from torch_geometric.utils import to_dgl
+
 from . import CustomDGLDataset
 
 
@@ -46,7 +48,7 @@ def load_data(dataset, use_dgl=False, use_text=False, seed=0):
     if not use_text:
         data, _ = get_raw_text(use_text=False, seed=seed)
         if use_dgl:
-            data = CustomDGLDataset(dataset, data)
+            data = to_dgl(data)
         return data, num_classes
 
     # for finetuning LM
@@ -78,5 +80,7 @@ def load_data(dataset, use_dgl=False, use_text=False, seed=0):
     #             text.append(content)
     else:
         data, text = get_raw_text(use_text=True, seed=seed)
-
+        if use_dgl:
+            # data = CustomDGLDataset(dataset, data)
+            data = to_dgl(data)
     return data, num_classes, text
