@@ -30,9 +30,9 @@ def load_data(dataset, use_dgl=False, use_text=False, seed=0):
     # elif dataset == 'pubmed':
     #     from core.data_utils.load_pubmed import get_raw_text_pubmed as get_raw_text
     #     num_classes = 3
-    # elif dataset == 'ogbn-arxiv':
-    #     from core.data_utils.load_arxiv import get_raw_text_arxiv as get_raw_text
-    #     num_classes = 40
+    elif dataset == 'ogbn-arxiv':
+        from . import get_raw_text_arxiv as get_raw_text
+        num_classes = 40
     # elif dataset == 'ogbn-products':
     #     from core.data_utils.load_products import get_raw_text_products as get_raw_text
     #     num_classes = 47
