@@ -39,6 +39,10 @@ class CustomDGLDataset(TorchDataset):
         return g
 
     @property
+    def device(self):
+        return self.pyg_data.x.device
+
+    @property
     def train_mask(self):
         return self.pyg_data.train_mask
 

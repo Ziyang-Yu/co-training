@@ -1,0 +1,2 @@
+Data(x=[1507, 1433], edge_index=[2, 3336], y=[1507], train_mask=[1507], val_mask=[1507], test_mask=[1507], n_id=[1507], e_id=[3336], num_sampled_nodes=[3], num_sampled_edges=[2], input_id=[128], batch_size=128)
+Data(x=[228, 1433], edge_index=[2, 375], y=[228], train_mask=[228], val_mask=[228], test_mask=[228], n_id=[228], e_id=[375], num_sampled_nodes=[3], num_sampled_edges=[2], input_id=[12], batch_size=12)
