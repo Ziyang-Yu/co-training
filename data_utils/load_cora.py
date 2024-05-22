@@ -53,7 +53,7 @@ def get_cora_casestudy(SEED=0):
 
 
 def parse_cora():
-    path = 'cora_orig/cora'
+    path = 'dataset/cora_orig/cora'
     idx_features_labels = np.genfromtxt(
         "{}.content".format(path), dtype=np.dtype(str))
     data_X = idx_features_labels[:, 1:-1].astype(np.float32)

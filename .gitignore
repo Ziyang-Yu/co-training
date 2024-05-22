@@ -6,3 +6,4 @@ env/
 .vscode/
 data/
 pretrained_models/
+*.pt
