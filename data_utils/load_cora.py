@@ -78,7 +78,7 @@ def get_raw_text_cora(use_text=False, seed=0):
     if not use_text:
         return data, None
 
-    with open('cora_orig/mccallum/cora/papers')as f:
+    with open('dataset/cora_orig/mccallum/cora/papers')as f:
         lines = f.readlines()
     pid_filename = {}
     for line in lines:
@@ -86,7 +86,7 @@ def get_raw_text_cora(use_text=False, seed=0):
         fn = line.split('\t')[1]
         pid_filename[pid] = fn
 
-    path = 'cora_orig/mccallum/cora/extractions/'
+    path = 'dataset/cora_orig/mccallum/cora/extractions/'
     text = []
     for pid in data_citeid:
         fn = pid_filename[pid]
