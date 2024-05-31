@@ -84,7 +84,7 @@ import torch
 import numpy as np
 # from ogb.nodeproppred import DglNodePropPredDataset
 
-from data_utils import load_data
+from data import load_data
 
 # dataset = dgl.data.CoraGraphDataset()
 # # device = 'cuda'      # change to 'cuda' for GPU

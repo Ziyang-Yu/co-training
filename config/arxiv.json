@@ -1,0 +1,18 @@
+{
+    "device": "cuda",
+    "train_loader": {
+        "batch_size": 64,
+        "shuffle": true,
+        "drop_last": true
+  },
+    "valid_loader": {
+        "batch_size": 64,
+        "shuffle": true,
+        "drop_last": true
+  },
+    "test_loader": {
+        "batch_size": 64,
+        "shuffle": true,
+        "drop_last": true
+  }
+}
