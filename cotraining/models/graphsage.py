@@ -5,7 +5,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 from dgl.nn import SAGEConv
 
-from utils import History
+from cotraining.utils import History
 
 
 class graphsage(nn.Module):
@@ -22,6 +22,7 @@ class graphsage(nn.Module):
                       n_id: Optional[torch.Tensor] = None,
                       offset: Optional[torch.Tensor] = None,
                       count: Optional[torch.Tensor] = None) -> torch.Tensor:
+        # print("batch_size:", batch_size)
         history.push(x[:batch_size], n_id[:batch_size], offset, count)
         h = history.pull(n_id[batch_size:]).to(x.device)
         return torch.cat([x[:batch_size], h], dim=0)

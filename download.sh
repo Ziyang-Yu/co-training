@@ -35,8 +35,9 @@ if [ -e dataset/ogbn_arxiv_orig/titleabs.tsv ]
 then
     echo "Arxiv dataset already exists."
 else
-    wget https://snap.stanford.edu/ogb/data/misc/ogbn_arxiv/titleabs.tsv.gz
-    gzip -d titleabs.tsv.gz
+    # wget https://snap.stanford.edu/ogb/data/misc/ogbn_arxiv/titleabs.tsv.gz
+    gdown https://drive.google.com/uc?id=1icSC92DMjJHJuksfSMvD8_97XiT3VaBF
+    # gunzip titleabs.tsv.gz
     mkdir dataset/ogbn_arxiv_orig
     mv titleabs.tsv dataset/ogbn_arxiv_orig
 fi

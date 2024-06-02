@@ -4,7 +4,6 @@ __pycache__/
 cora_orig/
 env/
 .vscode/
-data/
 pretrained_models/
 *.pt
 Graph-LLM/

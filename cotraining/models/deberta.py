@@ -27,16 +27,17 @@ class deberta:
         self.device = device
         return self
 
-    def forward(self, text):
-        def model_forward_input(input):
-            input = self.tokenizer(input, return_tensors='pt').to(self.device)
-            output = self.model(**input).last_hidden_state.mean(dim=1)
+    def forward(self, texts):
+        # def model_forward_input(input):
+        input = self.tokenizer(texts, padding=True, truncation=True, max_length=512, return_tensors='pt').to(self.device)
+        output = self.model(**input).last_hidden_state.mean(dim=1)
             # print(output.shape)
             # return self.model(**input).last_hidden_state.mean(dim=1)
             # print(output.shape)
-            return torch.squeeze(output)
+            # return torch.squeeze(output)
 
-        return torch.stack(list(map(model_forward_input, text)))
+        # return torch.stack(list(map(model_forward_input, text)))
+        return output
 
     def __call__(self, data):
         if isinstance(data, str):
