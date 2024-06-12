@@ -9,9 +9,9 @@ from cotraining.utils import History
 
 
 class graphsage(nn.Module):
-    def __init__(self, num_nodes, in_feats, h_feats, num_classes):
+    def __init__(self, num_nodes, in_feats, h_feats, num_classes, device='cpu'):
         super(graphsage, self).__init__()
-        self.history = [History(num_nodes, embedding_dim=in_feats, device='cpu'), History(num_nodes, embedding_dim=h_feats, device='cpu')]
+        self.history = [History(num_nodes, embedding_dim=in_feats, device=device), History(num_nodes, embedding_dim=h_feats, device=device)]
         self.conv1 = SAGEConv(in_feats, h_feats, aggregator_type='mean')
         self.conv2 = SAGEConv(h_feats, num_classes, aggregator_type='mean')
         self.h_feats = h_feats
@@ -28,7 +28,7 @@ class graphsage(nn.Module):
         return torch.cat([x[:batch_size], h], dim=0)
 
     @torch.no_grad()
-    def forward_once(self, mfgs, x):
+    def forward_once(self, mfgs, x) -> None:
         self.history[0].push(x, mfgs[0].srcdata['_ID'].cpu())
         h_dst = x[:mfgs[0].num_dst_nodes()]  # <---
         # print("h_dst.shape", h_dst.shape)
@@ -37,7 +37,7 @@ class graphsage(nn.Module):
         self.history[1].push(h, mfgs[1].srcdata['_ID'].cpu())
 
 
-    def forward(self, mfgs, x, batch_size):
+    def forward(self, mfgs, x, batch_size) -> torch.Tensor:
         # Lines that are changed are marked with an arrow: "<---"
         # print("x.shape: ", x.shape)
         x = self.push_and_pull(self.history[0], x, batch_size, mfgs[0].srcdata['_ID'].cpu())
@@ -50,6 +50,3 @@ class graphsage(nn.Module):
         h_dst = h[:mfgs[1].num_dst_nodes()]  # <---
         h = self.conv2(mfgs[1], (h, h_dst))  # <---
         return h
-
-
-# model = Model(in_feats=1433, h_feats=64, num_classes=7).to(device)

@@ -14,5 +14,10 @@
         "batch_size": 64,
         "shuffle": true,
         "drop_last": true
-  }
+  },
+    "model": {
+        "deberta": {
+            "max_length": 512
+        }
+    }
 }

@@ -5,7 +5,7 @@ import torch
 
 class History(torch.nn.Module):
     r"""A historical embedding storage module."""
-    def __init__(self, num_embeddings: int, embedding_dim: int, device=None):
+    def __init__(self, num_embeddings: int, embedding_dim: int, device='cpu'):
         super().__init__()
 
         self.num_embeddings = num_embeddings
@@ -17,15 +17,15 @@ class History(torch.nn.Module):
 
         self._device = 'cpu'
 
-        self.reset_parameters()
+        # self.reset_parameters()
 
     def reset_parameters(self):
         self.emb.fill_(0)
 
-    def _apply(self, fn):
-        # Set the `_device` of the module without transfering `self.emb`.
-        self._device = fn(torch.zeros(1)).device
-        return self
+    # def _apply(self, fn):
+    #     # Set the `_device` of the module without transfering `self.emb`.
+    #     self._device = fn(torch.zeros(1)).device
+    #     return self
 
     @torch.no_grad()
     def pull(self, n_id: Optional[torch.Tensor] = None) -> torch.Tensor:
@@ -50,11 +50,12 @@ class History(torch.nn.Module):
             self.emb[n_id] = x.to(self.emb.device).detach()
 
         else:  # Push in chunks:
-            src_o = 0
-            x = x.to(self.emb.device)
-            for dst_o, c, in zip(offset.tolist(), count.tolist()):
-                self.emb[dst_o:dst_o + c] = x[src_o:src_o + c]
-                src_o += c
+            # src_o = 0
+            # x = x.to(self.emb.device)
+            # for dst_o, c, in zip(offset.tolist(), count.tolist()):
+            #     self.emb[dst_o:dst_o + c] = x[src_o:src_o + c]
+            #     src_o += c
+            raise NotImplementedError
 
     def forward(self, *args, **kwargs):
         """"""
