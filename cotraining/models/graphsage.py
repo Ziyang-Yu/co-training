@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Iterator, Optional
 
 import torch
 import torch.nn.functional as F
@@ -9,12 +9,15 @@ from cotraining.utils import History
 
 
 class graphsage(nn.Module):
-    def __init__(self, num_nodes, in_feats, h_feats, num_classes, device='cpu'):
+    def __init__(self, num_nodes, in_feats, h_feats, num_classes, dropout, device='cpu'):
         super(graphsage, self).__init__()
         self.history = [History(num_nodes, embedding_dim=in_feats, device=device), History(num_nodes, embedding_dim=h_feats, device=device)]
         self.conv1 = SAGEConv(in_feats, h_feats, aggregator_type='mean')
         self.conv2 = SAGEConv(h_feats, num_classes, aggregator_type='mean')
         self.h_feats = h_feats
+
+    def parameters(self):
+        return list(self.conv1.parameters()) + list(self.conv2.parameters())
 
 
     def push_and_pull(self, history: History, x: torch.Tensor,
@@ -28,7 +31,8 @@ class graphsage(nn.Module):
         return torch.cat([x[:batch_size], h], dim=0)
 
     @torch.no_grad()
-    def forward_once(self, mfgs, x) -> None:
+    def forward_once(self, mfgs) -> None:
+        x = mfgs[0].srcdata['x']
         self.history[0].push(x, mfgs[0].srcdata['_ID'].cpu())
         h_dst = x[:mfgs[0].num_dst_nodes()]  # <---
         # print("h_dst.shape", h_dst.shape)

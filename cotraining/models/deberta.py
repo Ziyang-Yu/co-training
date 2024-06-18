@@ -2,9 +2,10 @@ import torch
 
 from transformers import BertTokenizer, BertModel, AutoTokenizer, DebertaModel, AutoModel, PreTrainedModel
 
-class deberta:
+class deberta(torch.nn.Module):
 
     def __init__(self, config):
+        super().__init__()
         self.__name__ = 'microsoft/deberta-base'
         self.__num_node_features__ = 768 
         self.device = 'cpu'
@@ -31,14 +32,15 @@ class deberta:
     @torch.no_grad()
     def forward_once(self, texts) -> torch.Tensor:
 
-        input = self.tokenizer(texts, padding=True, truncation=True, max_length=self.config.model.deberta.max_length, return_tensors='pt').to(self.device)
-        output = self.model(**input).last_hidden_state.mean(dim=1)
+        # input = self.tokenizer(texts, padding=True, truncation=True, max_length=self.config.model.deberta.max_length, return_tensors='pt').to(self.device)
+        inputs = self.tokenizer(texts, padding=self.config.lm_padding, truncation=self.config.lm_truncation, max_length=self.config.lm_max_length, return_tensors='pt').to(self.device)
+        output = self.model(**inputs).last_hidden_state.mean(dim=1)
         return output
 
 
     def forward(self, texts) -> torch.Tensor:
         # def model_forward_input(input):
-        input = self.tokenizer(texts, padding=True, truncation=True, max_length=self.config.model.deberta.max_length, return_tensors='pt').to(self.device)
+        input = self.tokenizer(texts, padding=self.config.lm_padding, truncation=self.config.lm_truncation, max_length=self.config.lm_max_length, return_tensors='pt').to(self.device)
         output = self.model(**input).last_hidden_state.mean(dim=1)
         return output
 
