@@ -1,1 +1,9 @@
 namespace(device='cuda', epoch=100, gnn_dropout=0.5, gnn_h_feats=256, gnn_lr=0.1, gnn_requires_grad=True, gnn_weight_decay=0.0001, lm_lr=0.0001, lm_max_length=512, lm_padding=True, lm_requires_grad=False, lm_truncation=True, lm_type='deberta-base', lm_weight_decay=0.0001, num_node_features=768, num_nodes=169343, once_batch_size=64, once_drop_last=True, once_shuffle=True, seed=42, test_batch_size=64, test_drop_last=True, test_shuffle=True, train_batch_size=64, train_drop_last=True, train_shuffle=True, valid_batch_size=64, valid_drop_last=True, valid_shuffle=True)
+Epoch 0 Valid Accuracy 0.3339717741935484  Best Accuracy 0.3339717741935484 Test Accuracy 0.14853013833992096
+Epoch 1 Valid Accuracy 0.07664650537634408  Best Accuracy 0.3339717741935484 Test Accuracy 0.058712121212121215
+Epoch 2 Valid Accuracy 0.07627688172043011  Best Accuracy 0.3339717741935484 Test Accuracy 0.058568017127799736
+Epoch 3 Valid Accuracy 0.07614247311827957  Best Accuracy 0.3339717741935484 Test Accuracy 0.05860918972332016
+Epoch 4 Valid Accuracy 0.076377688172043  Best Accuracy 0.3339717741935484 Test Accuracy 0.05862977602108037
+Epoch 5 Valid Accuracy 0.076377688172043  Best Accuracy 0.3339717741935484 Test Accuracy 0.05862977602108037
+Epoch 6 Valid Accuracy 0.0760752688172043  Best Accuracy 0.3339717741935484 Test Accuracy 0.058568017127799736
+Epoch 7 Valid Accuracy 0.0760752688172043  Best Accuracy 0.3339717741935484 Test Accuracy 0.05862977602108037

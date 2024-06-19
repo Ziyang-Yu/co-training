@@ -3,8 +3,8 @@ dataset/
 __pycache__/
 cora_orig/
 env/
+*pt
 .vscode/
 pretrained_models/
-*.pt
 Graph-LLM/
 pyg_autoscale/

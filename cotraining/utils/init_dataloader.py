@@ -3,7 +3,7 @@ import dgl
 
 def init_dataloader(graph, name, config):
 
-    sampler = dgl.dataloading.NeighborSampler([10, 10])
+    sampler = dgl.dataloading.NeighborSampler([10 for _ in range(config.gnn_num_layers)])
 
     train_mask = graph.ndata['train_mask']
     train_nids = torch.nonzero(train_mask, as_tuple=False).squeeze()

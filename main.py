@@ -81,10 +81,10 @@ config = {
     "test_shuffle": True,
     "test_drop_last": True,
 }
+print(config)
 
 config = dict_to_namespace(config)
 # config.epoch
-print(config)
 
 
 # In[ ]:
