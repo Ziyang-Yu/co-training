@@ -19,7 +19,7 @@ class graphsage(nn.Module):
         # self.conv2 = SAGEConv(h_feats, num_classes, aggregator_type='mean')
         # self.h_feats = h_feats
         self.histories = torch.nn.ModuleList([History(num_nodes, embedding_dim=in_feats, device=device)])
-        for _ in range(num_layers - 2):
+        for _ in range(num_layers - 1):
             self.histories.append(History(num_nodes, embedding_dim=h_feats, device=device))
         self.convs = torch.nn.ModuleList()
         self.convs.append(SAGEConv(in_feats, h_feats, aggregator_type='mean'))
@@ -38,17 +38,15 @@ class graphsage(nn.Module):
         for bn in self.bns:
             bn.reset_parameters()
 
-    def forward(self, mfgs, x, epoch):
-        for i, conv in enumerate(self.convs[:-1]):
-            # if epoch == 0:
-            #     self.histories[i].push(x, mfgs[i].srcdata['_ID'].cpu())
-            # else:
-            #     x = self.histories[i].push_and_pull(x, mfgs[i].srcdata['_ID'].cpu())
-            x = conv(mfgs[i], x)
-            x = self.bns[i](x)
+    def forward(self, mfgs, x, batch_size):
+        self.push_and_pull(self.histories[0], x, batch_size, mfgs[0].srcdata['_ID'].cpu())
+        for conv, bn, mfg, history in zip(self.convs[:-1], self.bns, mfgs[:-1], self.histories[1:]):
+
+            x = conv(mfg, x)
+            x = bn(x)
             x = F.relu(x)
+            x = self.push_and_pull(history, x, batch_size, mfg.dstdata['_ID'].cpu())
             x = F.dropout(x, p=self.dropout, training=self.training)
-        # print(x.shape)
         x = self.convs[-1](mfgs[-1], x)
         return x.log_softmax(dim=-1)
 
@@ -57,15 +55,14 @@ class graphsage(nn.Module):
     #     return list(self.conv1.parameters()) + list(self.conv2.parameters())
 
 
-    # def push_and_pull(self, history: History, x: torch.Tensor,
-    #                   batch_size: Optional[int] = None,
-    #                   n_id: Optional[torch.Tensor] = None,
-    #                   offset: Optional[torch.Tensor] = None,
-    #                   count: Optional[torch.Tensor] = None) -> torch.Tensor:
-    #     # print("batch_size:", batch_size)
-    #     history.push(x[:batch_size], n_id[:batch_size], offset, count)
-    #     h = history.pull(n_id[batch_size:]).to(x.device)
-    #     return torch.cat([x[:batch_size], h], dim=0)
+    def push_and_pull(self, history: History, x: torch.Tensor,
+                      batch_size: Optional[int] = None,
+                      n_id: Optional[torch.Tensor] = None,
+                      offset: Optional[torch.Tensor] = None,
+                      count: Optional[torch.Tensor] = None) -> torch.Tensor:
+        history.push(x[:batch_size], n_id[:batch_size], offset, count)
+        h = history.pull(n_id[batch_size:]).to(x.device)
+        return torch.cat([x[:batch_size], h], dim=0)
 
     # @torch.no_grad()
     # def forward_once(self, mfgs) -> None:
