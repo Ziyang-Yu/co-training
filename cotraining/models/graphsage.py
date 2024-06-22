@@ -39,7 +39,7 @@ class graphsage(nn.Module):
             bn.reset_parameters()
 
     def forward(self, mfgs, x, batch_size):
-        self.push_and_pull(self.histories[0], x, batch_size, mfgs[0].srcdata['_ID'].cpu())
+        x = self.push_and_pull(self.histories[0], x, batch_size, mfgs[0].srcdata['_ID'].cpu())
         for conv, bn, mfg, history in zip(self.convs[:-1], self.bns, mfgs[:-1], self.histories[1:]):
 
             x = conv(mfg, x)

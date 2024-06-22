@@ -3,7 +3,6 @@
 
 # In[ ]:
 
-
 import concurrent.futures
 import tqdm
 from typing import Optional
@@ -20,6 +19,8 @@ import dgl
 from cotraining import *
 
 # In[ ]:
+
+123456
 
 
 def dict_to_namespace(d):
@@ -55,12 +56,12 @@ config = {
     "lm_padding": True,
     "lm_truncation": True,
     "lm_requires_grad": False,
-    "pooler_hidden_size": 128, 
+    "pooler_hidden_size": 768, 
     "pooler_dropout": 0.5,
     "pooler_hidden_act": 'relu',
 
     "num_nodes": 169343,
-    "num_node_features": 128,
+    "num_node_features": 768,
     "gnn_h_feats": 256,
     "gnn_lr": 0.0005,
     "gnn_weight_decay": 0,
@@ -72,37 +73,23 @@ config = {
     "once_shuffle": True,
     "once_drop_last": True,
 
-    "train_batch_size": 1024,
+    "train_batch_size": 64,
     "train_shuffle": True,
     "train_drop_last": True,
 
-    "valid_batch_size": 1024,
+    "valid_batch_size": 64,
     "valid_shuffle": True,
     "valid_drop_last": True,
 
-    "test_batch_size": 1024,
+    "test_batch_size": 64,
     "test_shuffle": True,
     "test_drop_last": True,
 }
-
 config = dict_to_namespace(config)
 config.epoch
 
-# In[ ]:
-
 
 seed(config.seed)
-
-
-# with open('config/arxiv.json') as file:
-#     config = json.loads(file.read())
-# config = dict_to_namespace(config)
-
-
-# In[ ]:
-
-
-lm = deberta(config).to(config.device)
 
 # In[ ]:
 
@@ -112,30 +99,8 @@ graph = dgl.to_bidirected(graph, copy_ndata=True)
 graph = dgl.remove_self_loop(graph)
 graph = dgl.add_self_loop(graph)
 
-
-# In[ ]:
-
-
-len(text)
-
-# In[ ]:
-
-
-# features = torch.load('arxiv_deberta.pt')
-# graph.ndata['x'] = torch.squeeze(features)
-
-# In[ ]:
-
-
-graph.ndata['x'].shape
-
-# In[ ]:
-
-
-# model = graphsage(num_nodes=graph.num_nodes(), in_feats=lm.__num_node_features__, h_feats=64, num_classes=num_classes).to(config.device)
+lm = deberta(config=config).to(config.device)
 model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout).to(config.device)
-
-# In[ ]:
 
 
 for param in lm.parameters():
@@ -143,34 +108,12 @@ for param in lm.parameters():
 for param in model.parameters():
     param.requires_grad = config.gnn_requires_grad
 
-# In[ ]:
 
-
-# opt = torch.optim.Adam(list(model.parameters())+list(lm.parameters())) # 
 opt = torch.optim.Adam([
     {'params': lm.parameters(), 'lr': config.lm_lr, "weight_decay": config.lm_weight_decay},
     {'params': model.parameters(), 'lr': config.gnn_lr, "weight_decay": config.gnn_weight_decay}])
 
-train_dataloader, valid_dataloader, test_dataloader = init_dataloader(graph, 'once', config)
-
-# In[ ]:
-
-
-
-
-
-# forward_once(train_dataloader, model)
-# forward_once(valid_dataloader, model)
-# forward_once(test_dataloader, model)
-# torch.cuda.empty_cache()
-
-# In[ ]:
-
-
 train_dataloader, valid_dataloader, test_dataloader = init_dataloader(graph, 'train', config), init_dataloader(graph, 'val', config), init_dataloader(graph, 'test', config)
-
-# In[ ]:
-
 
 
 best_val_accuracy = 0.
@@ -184,13 +127,9 @@ for epoch in range(100):
             # print(output_nodes)
             # inputs = [text[i] for i in output_nodes]
             labels = mfgs[-1].dstdata['y']
-            
-            # inputs = lm(inputs).to(config.device)
-            inputs = mfgs[0].srcdata['x']
-
-            # print(inputs.shape, input_nodes.shape, output_nodes.shape, labels.shape)
-
-            # predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
+            with torch.no_grad():
+                inputs = lm([text[i] for i in output_nodes]).to(config.device)
+            # inputs = mfgs[0].srcdata['x']
             predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
             labels = torch.flatten(labels)
             # print(predictions.device, labels.device)
@@ -214,7 +153,10 @@ for epoch in range(100):
     labels = []
     with torch.no_grad() and tqdm.tqdm(valid_dataloader) as tq, torch.no_grad():
         for input_nodes, output_nodes, mfgs in tq:
-            inputs = mfgs[0].srcdata['x']
+
+            with torch.no_grad():
+                inputs = lm([text[i] for i in output_nodes]).to(config.device)
+            # inputs = mfgs[0].srcdata['x']
             labels.append(mfgs[-1].dstdata['y'].cpu().numpy())
             # predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.valid_batch_size).argmax(1).cpu().numpy())
             predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.valid_batch_size).argmax(1).cpu().numpy())
@@ -232,7 +174,9 @@ for epoch in range(100):
         for input_nodes, output_nodes, mfgs in tq:
             # inputs = [text[i] for i in input_nodes]
             # print(type(mfgs[0]))
-            inputs = mfgs[0].srcdata['x']
+            with torch.no_grad():
+                inputs = lm([text[i] for i in output_nodes]).to(config.device)
+            # inputs = mfgs[0].srcdata['x']
             labels.append(mfgs[-1].dstdata['y'].cpu().numpy())
             # inputs = lm(inputs).to(device)
             predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.test_batch_size).argmax(1).cpu().numpy())
@@ -248,3 +192,5 @@ for epoch in range(100):
         print('Epoch {} Valid Accuracy {}  Best Accuracy {} Test Accuracy {}'.format(epoch, val_accuracy, best_val_accuracy, test_accuracy))
         # Note that this tutorial do not train the whole model to the end.
         # break
+
+# %%
