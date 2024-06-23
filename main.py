@@ -18,9 +18,6 @@ import dgl
 
 from cotraining import *
 
-# In[ ]:
-
-123456
 
 
 def dict_to_namespace(d):
@@ -50,12 +47,12 @@ config = {
     "epoch": 2000,
 
     "lm_type": 'deberta-base',
-    "lm_lr": 1e-4,
+    "lm_lr": 0,
     "lm_max_length": 512,
     "lm_weight_decay": 1e-4,
     "lm_padding": True,
     "lm_truncation": True,
-    "lm_requires_grad": False,
+    "lm_requires_grad": True,
     "pooler_hidden_size": 768, 
     "pooler_dropout": 0.5,
     "pooler_hidden_act": 'relu',
@@ -69,19 +66,19 @@ config = {
     "gnn_requires_grad": True,
     "gnn_num_layers":7,
 
-    "once_batch_size": 64,
+    "once_batch_size": 1024,
     "once_shuffle": True,
     "once_drop_last": True,
 
-    "train_batch_size": 64,
+    "train_batch_size": 1024,
     "train_shuffle": True,
     "train_drop_last": True,
 
-    "valid_batch_size": 64,
+    "valid_batch_size": 1024,
     "valid_shuffle": True,
     "valid_drop_last": True,
 
-    "test_batch_size": 64,
+    "test_batch_size": 1024,
     "test_shuffle": True,
     "test_drop_last": True,
 }
@@ -95,13 +92,14 @@ seed(config.seed)
 
 
 graph, num_classes, text = load_data('ogbn-arxiv', use_dgl=True, use_text=True)
+graph.ndata['x'] = torch.load('arxiv_deberta.pt').squeeze()
 graph = dgl.to_bidirected(graph, copy_ndata=True)
 graph = dgl.remove_self_loop(graph)
 graph = dgl.add_self_loop(graph)
 
 lm = deberta(config=config).to(config.device)
 model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout).to(config.device)
-
+model = torch.load('deberta_pretrained_graphsage_model.pt')
 
 for param in lm.parameters():
     param.requires_grad = config.lm_requires_grad
@@ -117,7 +115,7 @@ train_dataloader, valid_dataloader, test_dataloader = init_dataloader(graph, 'tr
 
 
 best_val_accuracy = 0.
-best_model_path = 'model.pt'
+best_model_path = 'deberta_pretrained_graphsage_model.pt'
 
 for epoch in range(100):
     model.train()
@@ -127,9 +125,9 @@ for epoch in range(100):
             # print(output_nodes)
             # inputs = [text[i] for i in output_nodes]
             labels = mfgs[-1].dstdata['y']
-            with torch.no_grad():
-                inputs = lm([text[i] for i in output_nodes]).to(config.device)
-            # inputs = mfgs[0].srcdata['x']
+            # with torch.no_grad():
+            # inputs = lm([text[i] for i in output_nodes]).to(config.device)
+            inputs = mfgs[0].srcdata['x']
             predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
             labels = torch.flatten(labels)
             # print(predictions.device, labels.device)
@@ -154,9 +152,9 @@ for epoch in range(100):
     with torch.no_grad() and tqdm.tqdm(valid_dataloader) as tq, torch.no_grad():
         for input_nodes, output_nodes, mfgs in tq:
 
-            with torch.no_grad():
-                inputs = lm([text[i] for i in output_nodes]).to(config.device)
-            # inputs = mfgs[0].srcdata['x']
+            # with torch.no_grad():
+            # inputs = lm([text[i] for i in output_nodes]).to(config.device)
+            inputs = mfgs[0].srcdata['x']
             labels.append(mfgs[-1].dstdata['y'].cpu().numpy())
             # predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.valid_batch_size).argmax(1).cpu().numpy())
             predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.valid_batch_size).argmax(1).cpu().numpy())
@@ -174,9 +172,9 @@ for epoch in range(100):
         for input_nodes, output_nodes, mfgs in tq:
             # inputs = [text[i] for i in input_nodes]
             # print(type(mfgs[0]))
-            with torch.no_grad():
-                inputs = lm([text[i] for i in output_nodes]).to(config.device)
-            # inputs = mfgs[0].srcdata['x']
+            # with torch.no_grad():
+            # inputs = lm([text[i] for i in output_nodes]).to(config.device)
+            inputs = mfgs[0].srcdata['x']
             labels.append(mfgs[-1].dstdata['y'].cpu().numpy())
             # inputs = lm(inputs).to(device)
             predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.test_batch_size).argmax(1).cpu().numpy())

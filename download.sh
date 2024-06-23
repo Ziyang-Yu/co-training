@@ -47,16 +47,7 @@ then
     echo "pretrained GNN model already exists."
 else
     # wget https://snap.stanford.edu/ogb/data/misc/ogbn_arxiv/titleabs.tsv.gz
-    gdown https://drive.google.com/file/d/1Uiy5Q4q9g9SE0i09lFwHI46FcyByOYnj
-    # gunzip titleabs.tsv.gz
-fi
-
-if [ -e model.pt ]
-then
-    echo "pretrained GNN model already exists."
-else
-    # wget https://snap.stanford.edu/ogb/data/misc/ogbn_arxiv/titleabs.tsv.gz
-    gdown https://drive.google.com/file/d/1Uiy5Q4q9g9SE0i09lFwHI46FcyByOYnj
+    gdown https://drive.google.com/uc?id=1Uiy5Q4q9g9SE0i09lFwHI46FcyByOYnj
     # gunzip titleabs.tsv.gz
 fi
 
@@ -65,6 +56,6 @@ then
     echo "arxiv_deberta already exists."
 else
     # wget https://snap.stanford.edu/ogb/data/misc/ogbn_arxiv/titleabs.tsv.gz
-    gdown https://drive.google.com/file/d/1lBEJTfaWxJJqAlNeecUG19BLef5S0ht5
+    gdown https://drive.google.com/uc?id=1lBEJTfaWxJJqAlNeecUG19BLef5S0ht5
     # gunzip titleabs.tsv.gz
 fi
