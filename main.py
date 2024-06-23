@@ -168,6 +168,7 @@ for epoch in range(100):
             torch.save(lm, best_lm_path)
 
     best_model = torch.load(best_model_path)
+    best_lm = torch.load(best_lm_path)
     predictions = []
     labels = []
     with torch.no_grad() and tqdm.tqdm(test_dataloader) as tq, torch.no_grad():
