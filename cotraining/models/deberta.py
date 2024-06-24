@@ -28,7 +28,7 @@ class deberta(torch.nn.Module):
     def num_node_features(self) -> int:
         return self.__num_node_features__
 
-    def to(self, device) -> None:
+    def to(self, device) -> "deberta":
         self.model = self.model.to(device)
         self.pooler = self.pooler.to(device)
         self.device = device
