@@ -47,7 +47,7 @@ then
     echo "pretrained GNN model already exists."
 else
     # wget https://snap.stanford.edu/ogb/data/misc/ogbn_arxiv/titleabs.tsv.gz
-    gdown https://drive.google.com/uc?id=1Uiy5Q4q9g9SE0i09lFwHI46FcyByOYnj
+    gdown https://drive.google.com/uc?id=1Qk47siNAw-E7g5OuJrHx_uMTDu4AoPkv
     # gunzip titleabs.tsv.gz
 fi
 
