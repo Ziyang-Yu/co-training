@@ -20,71 +20,74 @@ from cotraining import *
 
 
 
-def dict_to_namespace(d):
-    """
-    Recursively converts a dictionary to a SimpleNamespace.
+# def dict_to_namespace(d):
+#     """
+#     Recursively converts a dictionary to a SimpleNamespace.
     
-    Args:
-        d (dict): The dictionary to convert.
+#     Args:
+#         d (dict): The dictionary to convert.
         
-    Returns:
-        SimpleNamespace: The converted namespace.
-    """
-    if isinstance(d, dict):
-        # Convert sub-dictionaries to SimpleNamespace recursively
-        return types.SimpleNamespace(**{k: dict_to_namespace(v) for k, v in d.items()})
-    else:
-        # Return non-dictionary values as-is
-        return d
+#     Returns:
+#         SimpleNamespace: The converted namespace.
+#     """
+#     if isinstance(d, dict):
+#         # Convert sub-dictionaries to SimpleNamespace recursively
+#         return types.SimpleNamespace(**{k: dict_to_namespace(v) for k, v in d.items()})
+#     else:
+#         # Return non-dictionary values as-is
+#         return d
 
 # In[ ]:
 
 
-# training params:
-config = {
-    "seed": 42,
-    "device": 'cuda',
-    "epoch": 2000,
+# # training params:
+# config = {
+#     "seed": 42,
+#     "device": 'cuda',
+#     "epoch": 2000,
 
-    "lm_type": 'deberta-base',
-    "lm_lr": 0,
-    "lm_max_length": 512,
-    "lm_weight_decay": 1e-4,
-    "lm_padding": True,
-    "lm_truncation": True,
-    "lm_requires_grad": True,
-    "pooler_hidden_size": 768, 
-    "pooler_dropout": 0.5,
-    "pooler_hidden_act": 'relu',
+#     "lm_type": 'deberta-base',
+#     "lm_lr": 0,
+#     "lm_max_length": 512,
+#     "lm_weight_decay": 1e-4,
+#     "lm_padding": True,
+#     "lm_truncation": True,
+#     "lm_requires_grad": True,
+#     "pooler_hidden_size": 768, 
+#     "pooler_dropout": 0.5,
+#     "pooler_hidden_act": 'relu',
 
-    "num_nodes": 169343,
-    "num_node_features": 768,
-    "gnn_h_feats": 256,
-    "gnn_lr": 0.0005,
-    "gnn_weight_decay": 0,
-    "gnn_dropout": 0.5,
-    "gnn_requires_grad": True,
-    "gnn_num_layers":7,
+#     "num_nodes": 169343,
+#     "num_node_features": 768,
+#     "gnn_h_feats": 256,
+#     "gnn_lr": 0.0005,
+#     "gnn_weight_decay": 0,
+#     "gnn_dropout": 0.5,
+#     "gnn_requires_grad": True,
+#     "gnn_num_layers":7,
 
-    "once_batch_size": 1024,
-    "once_shuffle": True,
-    "once_drop_last": True,
+#     "once_batch_size": 1024,
+#     "once_shuffle": True,
+#     "once_drop_last": True,
 
-    "train_batch_size": 16,
-    "train_shuffle": True,
-    "train_drop_last": True,
+#     "train_batch_size": 16,
+#     "train_shuffle": True,
+#     "train_drop_last": True,
 
-    "valid_batch_size": 16,
-    "valid_shuffle": True,
-    "valid_drop_last": True,
+#     "valid_batch_size": 64,
+#     "valid_shuffle": True,
+#     "valid_drop_last": True,
 
-    "test_batch_size": 16,
-    "test_shuffle": True,
-    "test_drop_last": True,
-}
-config = dict_to_namespace(config)
-config.epoch
+#     "test_batch_size": 64,
+#     "test_shuffle": True,
+#     "test_drop_last": True,
+# }
+# config = dict_to_namespace(config)
+# config.epoch
 
+
+
+config = load_config()
 
 seed(config.seed)
 

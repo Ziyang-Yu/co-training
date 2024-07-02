@@ -110,7 +110,7 @@ class deberta(torch.nn.Module):
 
     def forward(self, texts: List[str]) -> torch.Tensor:
         input = self.tokenizer(texts, padding=self.config.lm_padding, truncation=self.config.lm_truncation, max_length=self.config.lm_max_length, return_tensors='pt').to(self.device)
-        with save_on_cpu(pin_memory=True, device=self.device):
+        with save_on_cpu_async(pin_memory=True, device_type=self.device):
             encoder_layer = self.model(**input)[0]
             pooled_output = self.pooler(encoder_layer)
             return pooled_output

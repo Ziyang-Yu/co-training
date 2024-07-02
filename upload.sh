@@ -22,11 +22,11 @@ inotifywait -m -r -e modify,create,delete --format '%e %w%f' "${WATCHED_DIR}" | 
 do
   if [[ "$EVENT" == *"DELETE"* ]]; then
     echo "Detected change ${EVENT} in ${FILE}, starting rsync..."
-    DELETE_CMD="ssh ericyu8817@34.165.8.18 \"rm -rf $(convert_path "${FILE}")\""
+    DELETE_CMD="ssh ericyu8817@34.165.69.6 \"rm -rf $(convert_path "${FILE}")\""
     eval "${DELETE_CMD}"
   else
     echo "Detected change ${EVENT} in ${FILE}, starting rsync..."
-    UPLOAD_CMD="scp ${FILE}  root@34.165.8.18:$(convert_path "${FILE}")"
+    UPLOAD_CMD="scp ${FILE}  root@34.165.69.6:$(convert_path "${FILE}")"
     eval "${UPLOAD_CMD}"
   fi
 done
