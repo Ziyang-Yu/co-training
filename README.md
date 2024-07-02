@@ -7,6 +7,7 @@
 - 2024.05.11 跑通了PipeGCN在Reddit数据集的代码：需要放弃老版cuda版本的Pytorch和DGL
 - 2024.05.16 实现了Deberta+GraphSage的训练代码（.ipynb）commit a9ae54f
 - 2024.05.16 Fix bug: load_data order is different from dgl
+- 2024.07.1 实现了cora+gcn+historical emb的代码 .py commit d06932c0f
 
 <h2>Experimental Caution</h2>
 
