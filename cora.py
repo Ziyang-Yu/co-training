@@ -72,14 +72,6 @@ for epoch in range(config.epoch):
         if best_val_accuracy <= val_accuracy:
             best_val_accuracy = val_accuracy
             torch.save(gcn, best_model_path)
-    # try:
-    #     if best_model:
-    #         for p1, p2 in zip(best_model.parameters(), torch.load(best_model_path).parameters()):
-    #             if p1.data.ne(p2.data).sum() > 0:
-    #                 print(False)
-    #         print(True)
-    # except:
-    #     pass
     best_model = torch.load(best_model_path)
     predictions = []
     labels = []
