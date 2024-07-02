@@ -16,7 +16,7 @@ import sklearn
 import numpy as np
 import dgl
 
-from cotraining import *
+from cotraining import load_data, graphsage, deberta, init_dataloader, seed
 
 
 
@@ -59,7 +59,7 @@ config = {
 
     "num_nodes": 169343,
     "num_node_features": 768,
-    "gnn_h_feats": 256,
+    "gnn_h_feats": 768,
     "gnn_lr": 0.0005,
     "gnn_weight_decay": 0,
     "gnn_dropout": 0.5,
@@ -70,7 +70,7 @@ config = {
     "once_shuffle": True,
     "once_drop_last": True,
 
-    "train_batch_size": 16,
+    "train_batch_size": 150,
     "train_shuffle": True,
     "train_drop_last": True,
 
@@ -81,15 +81,16 @@ config = {
     "test_batch_size": 16,
     "test_shuffle": True,
     "test_drop_last": True,
+
+    "use_param_free_pooler": True,
+    "leading_alpha": 0.9,
+    "use_node_cache": True,
+    "node_cache": "cache/cache_emb.pth"
 }
 config = dict_to_namespace(config)
 config.epoch
 
-
 seed(config.seed)
-
-# In[ ]:
-
 
 graph, num_classes, text = load_data('ogbn-arxiv', use_dgl=True, use_text=True)
 # graph.ndata['x'] = torch.load('arxiv_deberta.pt').squeeze()
@@ -98,25 +99,39 @@ graph = dgl.remove_self_loop(graph)
 graph = dgl.add_self_loop(graph)
 
 lm = deberta(config=config).to(config.device)
-model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout).to(config.device)
-model = torch.load('deberta_pretrained_graphsage_model.pt')
+model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha).to(config.device)
+# model = torch.load('deberta_pretrained_graphsage_model.pt')
 
 for param in lm.parameters():
     param.requires_grad = config.lm_requires_grad
 for param in model.parameters():
     param.requires_grad = config.gnn_requires_grad
 
+if config.use_node_cache:
+    node_cache = torch.load(config.node_cache, map_location='cpu')
+    model.load_history(node_cache)
 
-opt = torch.optim.Adam([
-    {'params': lm.parameters(), 'lr': config.lm_lr, "weight_decay": config.lm_weight_decay},
-    {'params': model.parameters(), 'lr': config.gnn_lr, "weight_decay": config.gnn_weight_decay}])
+opt_group = []
+if config.lm_lr > 0.:
+    opt_group.append({'params': lm.parameters(), 'lr': config.lm_lr, "weight_decay": config.lm_weight_decay})
+    LM_USE_NO_GRAD = False
+else:
+    LM_USE_NO_GRAD = True
+
+if config.gnn_lr > 0:
+    opt_group.append({'params': model.parameters(), 'lr': config.gnn_lr, "weight_decay": config.gnn_weight_decay})
+    GNN_USE_NO_GRAD = False
+else:
+    GNN_USE_NO_GRAD = True
+
+assert len(opt_group) > 0, f'no learnable param found'
+opt = torch.optim.Adam(opt_group)
 
 train_dataloader, valid_dataloader, test_dataloader = init_dataloader(graph, 'train', config), init_dataloader(graph, 'val', config), init_dataloader(graph, 'test', config)
 
-
 best_val_accuracy = 0.
-best_model_path = 'deberta_pretrained_graphsage_model.pt'
-best_lm_path = 'deberta_pretrained_graphsage_lm.pt'
+best_model_path = 'best_deberta_pretrained_graphsage_model.pt'
+best_lm_path = 'best_deberta_pretrained_graphsage_lm.pt'
 
 for epoch in range(100):
     model.train()
@@ -127,9 +142,17 @@ for epoch in range(100):
             # inputs = [text[i] for i in output_nodes]
             labels = mfgs[-1].dstdata['y']
             # with torch.no_grad():
-            inputs = lm([text[i] for i in output_nodes]).to(config.device)
+            if LM_USE_NO_GRAD:
+                with torch.no_grad():
+                    inputs = lm([text[i] for i in output_nodes]).to(config.device)
+            else:
+                inputs = lm([text[i] for i in output_nodes]).to(config.device)
             # inputs = mfgs[0].srcdata['x']
-            predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
+            if GNN_USE_NO_GRAD:
+                with torch.no_grad():
+                    predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
+            else:
+                predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
             labels = torch.flatten(labels)
             # print(predictions.device, labels.device)
             loss = F.cross_entropy(predictions, labels)
