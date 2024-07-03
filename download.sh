@@ -11,6 +11,22 @@ else
 fi
 
 
+if [ -e cache/ ]
+then 
+    echo "cache folder already exists."
+else
+    mkdir cache
+    chmod -R 777 cache/
+fi
+
+
+if [ -e cache/cache_emb.pth ]
+then
+    echo "cached arxiv emb already exists."
+else
+    wget https://wzrpr-my.sharepoint.com/:u:/g/personal/pannenetsf_wzrpr_onmicrosoft_com/Edq5Db1RittKsEYK-ZuIW30BGZM9Xi_qS8OvoGJtl_Sy8A?e=AXpLbR&download=1 -O cache/cache_emb.pth
+fi
+
 if [ -e dataset/arxiv.pt ]
 then
     echo "Arxiv embedding already exists."
