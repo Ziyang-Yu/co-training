@@ -93,6 +93,7 @@ config = {
     
     "dataset": 'cora',
     "use_peft": True,
+    "lr_scheduler": "cosine",
 }
 
 config = dict_to_namespace(config)
@@ -152,11 +153,16 @@ else:
 assert len(opt_group) > 0, f'no learnable param found'
 opt = torch.optim.Adam(opt_group)
 
+if config.lr_scheduler == 'cosine':
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=config.epoch, eta_min=1e-6)
+elif config.lr_scheduler == 'none':
+    scheduler = None
+else:
+    raise NotImplementedError(f'not supported lr scheduler {config.lr_scheduler}')
+
 train_dataloader, valid_dataloader, test_dataloader = init_dataloader(graph, 'train', config), init_dataloader(graph, 'val', config), init_dataloader(graph, 'test', config)
 
 best_val_accuracy = 0.
-best_model_path = 'best_deberta_pretrained_graphsage_model.pt'
-best_lm_path = 'best_deberta_pretrained_graphsage_lm.pt'
 
 for epoch in range(config.epoch):
     if LM_USE_NO_GRAD is False:
@@ -197,6 +203,10 @@ for epoch in range(config.epoch):
 
             del input_nodes, output_nodes, mfgs, inputs, labels, predictions, loss
             torch.cuda.empty_cache()
+    if scheduler is not None:
+        for idx, lr in enumerate(scheduler.get_last_lr()):
+            writer.add_scalar(f'train/lr-{idx}', lr, epoch)
+        scheduler.step()
     if config.save_interval > 0 and epoch % config.save_interval == 0:
         saver(model, lm, f'epoch_{epoch}', LM_USE_NO_GRAD)
     if config.save_latest:
