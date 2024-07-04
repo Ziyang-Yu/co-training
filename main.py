@@ -65,6 +65,7 @@ config = {
     "gnn_dropout": 0.5,
     "gnn_requires_grad": True,
     "gnn_num_layers":7,
+    "gnn_use_residual": True,
 
     "once_batch_size": 1024,
     "once_shuffle": True,
@@ -99,7 +100,7 @@ graph = dgl.remove_self_loop(graph)
 graph = dgl.add_self_loop(graph)
 
 lm = deberta(config=config).to(config.device)
-model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha).to(config.device)
+model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual).to(config.device)
 # model = torch.load('deberta_pretrained_graphsage_model.pt')
 
 for param in lm.parameters():

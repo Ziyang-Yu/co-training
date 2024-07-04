@@ -9,7 +9,7 @@ from cotraining.utils import History
 
 
 class graphsage(nn.Module):
-    def __init__(self, num_layers, num_nodes, in_feats, h_feats, num_classes, dropout, alpha=0.9, device='cpu'):
+    def __init__(self, num_layers, num_nodes, in_feats, h_feats, num_classes, dropout, use_residual=False, alpha=0.9, device='cpu'):
         super(graphsage, self).__init__()
         self.history = History(num_nodes, embedding_dim=in_feats, device=device)
         self.convs = torch.nn.ModuleList()
@@ -23,6 +23,7 @@ class graphsage(nn.Module):
 
         self.dropout = dropout
         self.alpha = alpha
+        self.use_residual = use_residual
 
     def reset_parameters(self):
         for conv in self.convs:
@@ -38,8 +39,9 @@ class graphsage(nn.Module):
             x = conv(mfg, x)
             x = bn(x)
             x = F.relu(x)
-            node_emb = self.pull_only(x, history, mfg.dstdata['_ID'].cpu())
-            x = (1 - self.alpha) * x + self.alpha * node_emb
+            if self.use_residual:
+                node_emb = self.pull_only(x, history, mfg.dstdata['_ID'].cpu())
+                x = (1 - self.alpha) * x + self.alpha * node_emb
             x = F.dropout(x, p=self.dropout, training=self.training)
         x = self.convs[-1](mfgs[-1], x)
         return x.log_softmax(dim=-1)
