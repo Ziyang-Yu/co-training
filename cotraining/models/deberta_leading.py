@@ -1,27 +1,15 @@
 from typing import List
 
 import torch
-
-from transformers import BertTokenizer, BertModel, AutoTokenizer, AutoModel, PreTrainedModel
+from transformers import (AutoModel, AutoTokenizer, BertModel, BertTokenizer,
+                          PreTrainedModel)
 from transformers.models.deberta.modeling_deberta import ContextPooler
+
+from ..utils.auto_ckpt import CPUOffload
 from .auto_checkpoint_deberta import DebertaModel
 
 
-class NonParamPooler(torch.nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-    def forward(self, hidden_states):
-        # We "pool" the model by simply taking the hidden state corresponding
-        # to the first token.
-        context_token = hidden_states[:, 0]
-        return context_token
-
-    @property
-    def output_dim(self):
-        return self.config.hidden_size
-
-class deberta(torch.nn.Module):
+class DEBERTALeading(torch.nn.Module):
 
     def __init__(self, config):
         super().__init__()
@@ -31,10 +19,7 @@ class deberta(torch.nn.Module):
         self.tokenizer = AutoTokenizer.from_pretrained("microsoft/deberta-base")
 # Load model directly
         self.model = DebertaModel.from_pretrained("microsoft/deberta-base")
-        if config.use_param_free_pooler:
-            self.pooler = NonParamPooler(config)
-        else:
-            self.pooler = ContextPooler(config)
+        self.pooler = ContextPooler(config) 
         self.config = config
         # self.model = DebertaModel.from_pretrained("microsoft/deberta-base")
         
@@ -53,10 +38,12 @@ class deberta(torch.nn.Module):
         self.device = device
         return self
 
-    def forward(self, texts: List[str]) -> torch.Tensor:
-        input = self.tokenizer(texts, padding=self.config.lm_padding, truncation=self.config.lm_truncation, max_length=self.config.lm_max_length, return_tensors='pt').to(self.device)
+    def forward(self, neighbor_texts: List[str], target_texts: List[str]) -> torch.Tensor:
+        neighbor_texts = self.tokenizer(neighbor_texts, padding=self.config.lm_padding, truncation=self.config.lm_truncation, max_length=self.config.lm_max_length, return_tensors='pt').to(self.device)
+        target_texts = self.tokenizer(target_texts, padding=self.config.lm_padding, truncation=self.config.lm_truncation, max_length=self.config.lm_max_length, return_tensors='pt').to(self.device)
+        
         encoder_layer = self.model(**input)[0]
-        pooled_output = self.pooler(encoder_layer)
+        pooled_output = encoder_layer[:,0,:]
         return pooled_output
 
     def __call__(self, data) -> torch.Tensor:
