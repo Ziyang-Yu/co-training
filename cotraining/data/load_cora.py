@@ -90,6 +90,10 @@ def get_raw_text_cora(use_text=False, seed=0):
     text = []
     for pid in data_citeid:
         fn = pid_filename[pid]
+        import os
+        if os.path.exists(path + fn) is False:
+            print(fn)
+            continue
         with open(path+fn) as f:
             lines = f.read().splitlines()
 

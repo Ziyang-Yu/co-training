@@ -32,74 +32,76 @@ def dict_to_namespace(d):
     """
     if isinstance(d, dict):
         # Convert sub-dictionaries to SimpleNamespace recursively
-        return types.SimpleNamespace(**{k: dict_to_namespace(v) for k, v in d.items()})
+        return Namespace(**{k: dict_to_namespace(v) for k, v in d.items()})
     else:
         # Return non-dictionary values as-is
         return d
 
-# In[ ]:
-
-
+_n = 40
 # training params:
 config = {
     "seed": 42,
     "device": 'cuda',
-    "epoch": 2000,
+    "epoch": 500,
 
     "lm_type": 'deberta-base',
-    "lm_lr": 0,
-    "lm_max_length": 512,
-    "lm_weight_decay": 1e-4,
+    "lm_lr": 5e-5,
+    "lm_max_length": 256,
+    "lm_weight_decay": 0.,
     "lm_padding": True,
     "lm_truncation": True,
     "lm_requires_grad": True,
-    "pooler_hidden_size": 768, 
+    "pooler_hidden_size": 768,
     "pooler_dropout": 0.5,
     "pooler_hidden_act": 'relu',
 
-    "num_nodes": 169343,
+    "num_nodes": 2707,
     "num_node_features": 768,
     "gnn_h_feats": 768,
-    "gnn_lr": 0.0005,
-    "gnn_weight_decay": 0,
+    "gnn_lr": 1e-5,
+    "gnn_weight_decay": 0.000,
     "gnn_dropout": 0.5,
     "gnn_requires_grad": True,
     "gnn_num_layers":7,
     "gnn_use_residual": True,
 
-    "once_batch_size": 1024,
+    "once_batch_size": _n,
     "once_shuffle": True,
     "once_drop_last": True,
 
-    "train_batch_size": 150,
+    "train_batch_size": _n,
     "train_shuffle": True,
     "train_drop_last": True,
 
-    "valid_batch_size": 16,
+    "valid_batch_size": _n,
     "valid_shuffle": True,
     "valid_drop_last": True,
 
-    "test_batch_size": 16,
+    "test_batch_size": 100,
     "test_shuffle": True,
     "test_drop_last": True,
 
     "use_param_free_pooler": True,
     "leading_alpha": 0.9,
     "use_node_cache": True,
-    "node_cache": "cache/cache_emb.pth",
 
-    "log_dir": "log/exp-name", 
-    "save_interval": 5,
-    "save_latest": True,
+    "node_cache": "cache_cora/cache_emb.pth",
+    "log_dir": "log/lora_cora", 
+    "save_interval": 0,
     "resume": False,
+    "save_latest": True,
+    
+    "dataset": 'cora',
+    "use_peft": True,
 }
+
 config = dict_to_namespace(config)
 
 writer, saver, loader = save_exp(config)
 
 seed(config.seed)
 
-graph, num_classes, text = load_data('ogbn-arxiv', use_dgl=True, use_text=True)
+graph, num_classes, text = load_data(config.dataset, use_dgl=True, use_text=True)
 # graph.ndata['x'] = torch.load('arxiv_deberta.pt').squeeze()
 graph = dgl.to_bidirected(graph, copy_ndata=True)
 graph = dgl.remove_self_loop(graph)
@@ -107,6 +109,19 @@ graph = dgl.add_self_loop(graph)
 
 lm = deberta(config=config).to(config.device)
 model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual).to(config.device)
+
+if config.use_peft:
+    from peft import get_peft_config, get_peft_model, LoraConfig, TaskType
+    peft_config = LoraConfig(
+        task_type=TaskType.FEATURE_EXTRACTION,
+        inference_mode=False,
+        r=8,
+        lora_alpha=32,
+        lora_dropout=0.1
+    )
+    lm.model = get_peft_model(lm.model, peft_config)
+    lm.model.print_trainable_parameters()
+    assert config.lm_lr > 0.
 
 if config.resume:
     t = loader(model, lm, 'latest')
@@ -143,8 +158,11 @@ best_val_accuracy = 0.
 best_model_path = 'best_deberta_pretrained_graphsage_model.pt'
 best_lm_path = 'best_deberta_pretrained_graphsage_lm.pt'
 
-for epoch in range(100):
-    model.train()
+for epoch in range(config.epoch):
+    if LM_USE_NO_GRAD is False:
+        lm.train()
+    if GNN_USE_NO_GRAD:
+        model.train()
 
     with tqdm.tqdm(train_dataloader) as tq:
         for step, (input_nodes, output_nodes, mfgs) in enumerate(tq):
@@ -159,8 +177,7 @@ for epoch in range(100):
                 inputs = lm([text[i] for i in output_nodes]).to(config.device)
             # inputs = mfgs[0].srcdata['x']
             if GNN_USE_NO_GRAD:
-                with torch.no_grad():
-                    predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
+                predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
             else:
                 predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
             labels = torch.flatten(labels)
@@ -181,10 +198,11 @@ for epoch in range(100):
             del input_nodes, output_nodes, mfgs, inputs, labels, predictions, loss
             torch.cuda.empty_cache()
     if config.save_interval > 0 and epoch % config.save_interval == 0:
-        saver(model, lm, f'epoch_{epoch}')
+        saver(model, lm, f'epoch_{epoch}', LM_USE_NO_GRAD)
     if config.save_latest:
-        saver(model, lm, 'latest')
+        saver(model, lm, 'latest', LM_USE_NO_GRAD)
     model.eval()
+    lm.eval()
 
     predictions = []
     labels = []
@@ -203,7 +221,7 @@ for epoch in range(100):
         writer.add_scalar('valid/accuracy', val_accuracy, epoch)
         if best_val_accuracy <= val_accuracy:
             best_val_accuracy = val_accuracy
-            saver(model, lm, 'best')
+            saver(model, lm, 'best', LM_USE_NO_GRAD)
 
     predictions = []
     labels = []
