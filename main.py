@@ -62,7 +62,7 @@ config = {
     "gnn_weight_decay": 0.000,
     "gnn_dropout": 0.5,
     "gnn_requires_grad": True,
-    "gnn_num_layers":7,
+    "gnn_num_layers":2,
     "gnn_use_residual": True,
 
     "once_batch_size": _n,
@@ -86,7 +86,7 @@ config = {
     "use_node_cache": True,
 
     "node_cache": "cache_cora/cache_emb.pth",
-    "log_dir": "log/lora_cora", 
+    "log_dir": "log/lora_cora_cosine", 
     "save_interval": 0,
     "resume": False,
     "save_latest": True,
