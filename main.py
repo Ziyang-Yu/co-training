@@ -89,10 +89,13 @@ config = {
     "node_cache": "cache/cache_emb.pth",
 
     "log_dir": "log/exp-name", 
+    "save_interval": 5,
+    "save_latest": True,
+    "resume": False,
 }
 config = dict_to_namespace(config)
 
-writer, saver = save_exp(config)
+writer, saver, loader = save_exp(config)
 
 seed(config.seed)
 
@@ -104,7 +107,10 @@ graph = dgl.add_self_loop(graph)
 
 lm = deberta(config=config).to(config.device)
 model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual).to(config.device)
-# model = torch.load('deberta_pretrained_graphsage_model.pt')
+
+if config.resume:
+    t = loader(model, lm, 'latest')
+    print('resume checkpoint models from latest')
 
 for param in lm.parameters():
     param.requires_grad = config.lm_requires_grad
@@ -174,7 +180,10 @@ for epoch in range(100):
 
             del input_nodes, output_nodes, mfgs, inputs, labels, predictions, loss
             torch.cuda.empty_cache()
-            # print(torch.cuda.mem_get_info())
+    if config.save_interval > 0 and epoch % config.save_interval == 0:
+        saver(model, lm, f'epoch_{epoch}')
+    if config.save_latest:
+        saver(model, lm, 'latest')
     model.eval()
 
     predictions = []

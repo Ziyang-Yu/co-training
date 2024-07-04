@@ -15,5 +15,12 @@ def save_exp(config: Namespace) -> Tuple[tw.SummaryWriter, Callable]:
     def saver(model, lm, tag):
         torch.save(model.state_dict(), os.path.join(ckpt_dir, f'{tag}_model.pt'))
         torch.save(lm.state_dict(), os.path.join(ckpt_dir, f'{tag}_lm.pt'))
-    return writer, saver
+    def loader(model, lm, tag):
+        if not os.path.exists(os.path.join(ckpt_dir, f'{tag}_model.pt')):
+            return
+        if not os.path.exists(os.path.join(ckpt_dir, f'{tag}_lm.pt')):
+            return
+        model.load_state_dict(torch.load(os.path.join(ckpt_dir, f'{tag}_model.pt')))
+        lm.load_state_dict(torch.load(os.path.join(ckpt_dir, f'{tag}_lm.pt')))
+    return writer, saver, loader
 
