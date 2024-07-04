@@ -16,7 +16,7 @@ import sklearn
 import numpy as np
 import dgl
 
-from cotraining import load_data, graphsage, deberta, init_dataloader, seed
+from cotraining import load_data, graphsage, deberta, init_dataloader, seed, save_exp
 
 
 
@@ -86,10 +86,13 @@ config = {
     "use_param_free_pooler": True,
     "leading_alpha": 0.9,
     "use_node_cache": True,
-    "node_cache": "cache/cache_emb.pth"
+    "node_cache": "cache/cache_emb.pth",
+
+    "log_dir": "log/exp-name", 
 }
 config = dict_to_namespace(config)
-config.epoch
+
+writer, saver = save_exp(config)
 
 seed(config.seed)
 
@@ -166,6 +169,8 @@ for epoch in range(100):
             accuracy = sklearn.metrics.accuracy_score(labels.cpu().numpy(), predictions.argmax(1).detach().cpu().numpy())
 
             tq.set_postfix({'loss': '%.03f' % loss.item(), 'acc': '%.03f' % accuracy}, refresh=False)
+            writer.add_scalar('train/loss', loss.item(), epoch * len(train_dataloader) + step)
+            writer.add_scalar('train/accuracy', accuracy, epoch * len(train_dataloader) + step)
 
             del input_nodes, output_nodes, mfgs, inputs, labels, predictions, loss
             torch.cuda.empty_cache()
@@ -186,20 +191,15 @@ for epoch in range(100):
         predictions = np.concatenate(predictions)
         labels = np.concatenate(labels)
         val_accuracy = sklearn.metrics.accuracy_score(labels, predictions)
+        writer.add_scalar('valid/accuracy', val_accuracy, epoch)
         if best_val_accuracy <= val_accuracy:
             best_val_accuracy = val_accuracy
-            torch.save(model, best_model_path)
-            torch.save(lm, best_lm_path)
+            saver(model, lm, 'best')
 
-    best_model = torch.load(best_model_path)
-    best_lm = torch.load(best_lm_path)
     predictions = []
     labels = []
     with torch.no_grad() and tqdm.tqdm(test_dataloader) as tq, torch.no_grad():
         for input_nodes, output_nodes, mfgs in tq:
-            # inputs = [text[i] for i in input_nodes]
-            # print(type(mfgs[0]))
-            # with torch.no_grad():
             inputs = lm([text[i] for i in output_nodes]).to(config.device)
             # inputs = mfgs[0].srcdata['x']
             labels.append(mfgs[-1].dstdata['y'].cpu().numpy())
@@ -211,10 +211,6 @@ for epoch in range(100):
         labels = np.concatenate(labels)
         test_accuracy = sklearn.metrics.accuracy_score(labels, predictions)
 
-        # with open('log.txt', 'a') as file:
-        #     file.write('Epoch {} Valid Accuracy {}  Best Accuracy {} Test Accuracy {}\n'.format(epoch, val_accuracy, best_val_accuracy, test_accuracy))
-
         print('Epoch {} Valid Accuracy {}  Best Accuracy {} Test Accuracy {}'.format(epoch, val_accuracy, best_val_accuracy, test_accuracy))
-        # Note that this tutorial do not train the whole model to the end.
-        # break
+        writer.add_scalar('test/accuracy', test_accuracy, epoch)
 
