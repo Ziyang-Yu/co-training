@@ -16,7 +16,7 @@ import sklearn
 import numpy as np
 import dgl
 
-from cotraining import load_data, graphsage, deberta, init_dataloader, seed, save_exp
+from cotraining import load_data, graphsage, deberta, init_dataloader, seed, save_exp, gnn_registry
 
 
 
@@ -55,7 +55,7 @@ config = {
     "pooler_dropout": 0.5,
     "pooler_hidden_act": 'relu',
 
-    "num_nodes": 2707,
+"num_nodes": 169343,
     "num_node_features": 768,
     "gnn_h_feats": 768,
     "gnn_lr": 1e-5,
@@ -85,8 +85,8 @@ config = {
     "leading_alpha": 0.9,
     "use_node_cache": True,
 
-    "node_cache": "cache_cora/cache_emb.pth",
-    "log_dir": "log/lora_cora_cosine", 
+    "node_cache": "cache/cache_emb.pth",    
+    "log_dir": "log/lora_cora_cosine_arxiv_simple_gcn", 
     "save_interval": 0,
     "resume": False,
     "save_latest": True,
@@ -94,6 +94,8 @@ config = {
     "dataset": 'cora',
     "use_peft": True,
     "lr_scheduler": "cosine",
+
+    "gnn_type": "graphsage",
 }
 
 config = dict_to_namespace(config)
@@ -109,7 +111,7 @@ graph = dgl.remove_self_loop(graph)
 graph = dgl.add_self_loop(graph)
 
 lm = deberta(config=config).to(config.device)
-model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual).to(config.device)
+model = gnn_registry(model_name=config.gnn_type, model_kwargs=dict(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual)).to(config.device)
 
 if config.use_peft:
     from peft import get_peft_config, get_peft_model, LoraConfig, TaskType
