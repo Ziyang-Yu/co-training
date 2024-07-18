@@ -1,0 +1,64 @@
+
+from_scratch: false
+n_epoches: 3
+train_steps: &train_steps 5000
+save_interval: 1000
+test_freq: 0
+valid_freq: 0
+max_seq_len: 1024
+train_micro_batch_size_per_gpu: 40
+train_batch_size: 40
+
+num_workers: 1
+
+use_grad_ckpt: false
+use_flash_attn: false
+# data config for deepspeed 
+dataloader_drop_last: true
+
+# data config for dgl 
+train_drop_last: true
+train_shuffle: true 
+valid_batch_size: 40
+valid_drop_last: False
+valid_shuffle: False 
+test_batch_size: 40
+test_drop_last: false 
+test_shuffle: false 
+
+steps_per_print: 1
+optimizer: 
+  type: SGD
+optimizer_groups:
+  # the optimizer is of the configed
+  llm:
+    lr: 5.0e-5
+  gnn:
+    lr: 1.0e-5
+
+scheduler: 
+  type: WarmupCosineLR
+  params: 
+    warmup_num_steps: 0
+    cos_min_ratio: 0.01 
+    total_num_steps: *train_steps
+
+bf16: 
+  enabled: false 
+fp16: 
+  enabled: true
+  auto_cast: false
+  fused_optimizer: false
+  loss_scale: 0
+  initial_scale_power: 16
+  loss_scale_window: 1000
+  hysteresis: 2
+  min_loss_scale: 1
+
+model_topo: 
+  process_topology: 
+    axes: [pipe, data]
+    dims: [4, 1]
+  parts: [6,7,7,10]
+  # parts: [4,5,7,10]
+

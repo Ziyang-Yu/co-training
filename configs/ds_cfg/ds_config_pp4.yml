@@ -1,0 +1,67 @@
+# data config for deepspeed 
+train_micro_batch_size_per_gpu: 1
+train_batch_size: 4 
+dataloader_drop_last: true
+
+# data config for dgl 
+train_drop_last: true
+train_shuffle: true 
+valid_batch_size: 4
+valid_drop_last: False
+valid_shuffle: False 
+test_batch_size: 4
+test_drop_last: false 
+test_shuffle: false 
+
+steps_per_print: 1
+optimizer: 
+  type: SGD
+  # type: AdamW
+  # params: 
+  #   lr: 1.0e-5
+  #   betas: [0.9, 0.999]
+  #   weight_decay: 4.0e-5
+  #   eps: 1.0e-8
+  # no_wd_kws: ['bias', '[a-zA-Z]*norm'] # remove this or empty list if no need of this
+scheduler: 
+  type: WarmupCosineLR
+  params: 
+    warmup_num_steps: 100
+    warmup_min_ratio: 0.02
+    cos_min_ratio: 0.2 
+    total_num_steps: 1000
+
+gradient_clipping: 2.0
+
+bf16: 
+  enabled: false 
+fp16: 
+  enabled: true
+  auto_cast: false
+  fused_optimizer: false
+  loss_scale: 0
+  initial_scale_power: 16
+  loss_scale_window: 1000
+  hysteresis: 2
+  min_loss_scale: 1
+
+
+aux_max_z_loss: # remove this if you don't need this aux loss
+    weight: 2.0e-4
+
+model_topo: 
+  process_topology: 
+    axes: [pipe, data]
+    dims: [4, 1]
+  parts: [8, 9, 9, 8]
+
+from_scratch: false
+
+n_epoches: 3
+test_freq: 0
+valid_freq: 0
+max_seq_len: 1024
+
+use_grad_ckpt: false
+
+use_flash_attn: false

@@ -1,13 +1,21 @@
-<h1 align="center">Co-training of GNN and LLM</h1>
+# P2G: Pipeline training towards GNN 
 
+## Environment setup
 
-<h2>Experiments Log</h2>
+Build the conda env from the `env.yaml` file:
+```bash
+conda env create -f env.yaml
+```
+Install the `p2g` package and `deepspeed`:
+```bash
+cd DeepSpeed && python setup.py develop && cd .. 
+python setup.py develop
+```
 
-- 2024.04.29 根据TAPE的代码和数据集写了数据处理py文件，使用bert-base-cased处理文本，前向传播可以在cpu上运行，反向传播未知。
-- 2024.05.11 跑通了PipeGCN在Reddit数据集的代码：需要放弃老版cuda版本的Pytorch和DGL
-- 2024.05.16 实现了Deberta+GraphSage的训练代码（.ipynb）commit a9ae54f
-- 2024.05.16 Fix bug: load_data order is different from dgl
+## Ckpt download
 
-<h2>Experimental Caution</h2>
+Use the scripts under `scripts/save/` to download the checkpoints of llama2-7b and opt-1.3b and turn them into the p2g format. 
 
-- 服务器最好在中国大陆外（方便连接huggingface）
+## Run
+
+Refer to `scripts/run_p2g.sh`.
