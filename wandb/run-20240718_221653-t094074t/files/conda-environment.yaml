@@ -4,6 +4,8 @@ channels:
   - dglteam/label/th23_cu121
   - nvidia
   - defaults
+  - nodefaults
+  - conda-forge
 dependencies:
   - _libgcc_mutex=0.1=main
   - _openmp_mutex=5.1=1_gnu
@@ -186,34 +188,70 @@ dependencies:
   - zlib=1.2.13=h5eee18b_1
   - zstd=1.5.5=hc292b87_2
   - pip:
+      - absl-py==2.1.0
+      - accelerate==0.32.1
       - aiohttp==3.9.5
       - aiosignal==1.3.1
       - annotated-types==0.6.0
       - async-timeout==4.0.3
       - attrs==23.2.0
       - beautifulsoup4==4.12.3
+      - cachetools==5.4.0
+      - click==8.1.7
+      - deepspeed==0.14.4
+      - docker-pycreds==0.4.0
       - frozenlist==1.4.1
       - fsspec==2024.3.1
       - gdown==5.2.0
+      - gitdb==4.0.11
+      - gitpython==3.1.43
+      - google-auth==2.32.0
+      - google-auth-oauthlib==1.0.0
+      - grpcio==1.65.1
+      - hjson==3.1.0
       - huggingface-hub==0.23.0
+      - importlib-metadata==8.0.0
       - joblib==1.4.2
-      - ogb==1.3.6
+      - littleutils==0.2.4
+      - markdown==3.6
       - multidict==6.0.5
+      - ninja==1.11.1.1
+      - nvidia-ml-py==12.555.43
+      - oauthlib==3.2.2
+      - ogb==1.3.6
+      - outdated==0.2.2
       - pandas==2.0.3
+      - peft==0.11.1
+      - protobuf==5.27.2
+      - py-cpuinfo==9.0.0
+      - pyasn1==0.6.0
+      - pyasn1-modules==0.4.0
       - pydantic==2.7.1
       - pydantic-core==2.18.2
       - pyparsing==3.1.2
       - python-dateutil==2.9.0.post0
       - pytz==2024.1
       - regex==2024.5.10
+      - requests-oauthlib==2.0.0
+      - rsa==4.9
       - safetensors==0.4.3
       - scikit-learn==1.3.2
+      - sentry-sdk==2.10.0
+      - setproctitle==1.3.3
       - six==1.16.0
+      - smmap==5.0.1
       - soupsieve==2.5
+      - tensorboard==2.14.0
+      - tensorboard-data-server==0.7.2
+      - tensorboardx==2.6.2.2
       - threadpoolctl==3.5.0
       - tokenizers==0.19.1
       - torch-geometric==2.5.3
       - torchdata==0.7.1
       - transformers==4.40.2
       - tzdata==2024.1
-      - yarl==1.9.4      - yarl==1.9.4
+      - wandb==0.17.4
+      - werkzeug==3.0.3
+      - yarl==1.9.4
+      - zipp==3.19.2
+prefix: /home/ericyu8817/co-training/env

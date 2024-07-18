@@ -15,6 +15,7 @@ import torch.nn.functional as F
 import sklearn
 import numpy as np
 import dgl
+import wandb
 
 from cotraining import load_data, graphsage, opt_1_3b, init_dataloader, seed, save_exp
 
@@ -53,14 +54,14 @@ config = {
     "lm_padding": True,
     "lm_truncation": True,
     "lm_requires_grad": True,
-    "pooler_hidden_size": 768, 
+    "pooler_hidden_size": 2048, 
     "pooler_dropout": 0.5,
     "pooler_hidden_act": 'relu',
 
-    "num_nodes": 169343,
-    "num_node_features": 50272,
-    "gnn_h_feats": 768,
-    "gnn_lr": 0.0005,
+    "num_nodes": 2708,
+    "num_node_features": 2048,
+    "gnn_h_feats": 2048,
+    "gnn_lr": 0.1,
     "gnn_weight_decay": 0,
     "gnn_dropout": 0.5,
     "gnn_requires_grad": True,
@@ -71,42 +72,48 @@ config = {
     "once_shuffle": True,
     "once_drop_last": True,
 
-    "train_batch_size": 4,
+    "train_batch_size": 64,
     "train_shuffle": True,
     "train_drop_last": True,
-    "valid_batch_size": 16,
+    "valid_batch_size": 64,
     "valid_shuffle": True,
     "valid_drop_last": True,
 
-    "test_batch_size": 16,
+    "test_batch_size": 64,
     "test_shuffle": True,
     "test_drop_last": True,
 
     "use_param_free_pooler": True,
     "leading_alpha": 0.9,
     "use_node_cache": True,
-    "node_cache": "cache/cache_emb_opt_1_3b.pth",
+    "node_cache": "cache/warm_emb.pth",
 
     "log_dir": "log/exp-name", 
     "save_interval": 5,
     "save_latest": True,
     "resume": False,
 }
+wandb.init(
+    # Set the project where this run will be logged
+    project="co-training opt1.3b cora",
+    # Track hyperparameters and run metadata
+    config=config,
+)
 config = dict_to_namespace(config)
 
 writer, saver, loader = save_exp(config)
 
 seed(config.seed)
 
-print("start loading arxiv")
+print("start loading cora")
 
-graph, num_classes, text = load_data('ogbn-arxiv', use_dgl=True, use_text=True)
+graph, num_classes, text = load_data('cora', use_dgl=True, use_text=True)
 # graph.ndata['x'] = torch.load('arxiv_deberta.pt').squeeze()
 graph = dgl.to_bidirected(graph, copy_ndata=True)
 graph = dgl.remove_self_loop(graph)
 graph = dgl.add_self_loop(graph)
 
-print("Finish loading arxiv. Start loading lm and model")
+print("Finish loading cora. Start loading lm and model")
 lm = opt_1_3b(config=config).to(config.device)
 model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual).to(config.device)
 print("Finish loading lm and model")
@@ -159,28 +166,29 @@ for epoch in range(100):
             # inputs = [text[i] for i in output_nodes]
             labels = mfgs[-1].dstdata['y']
             # with torch.no_grad():
-            print("Start lm forward")
+            #print("Start lm forward")
             if LM_USE_NO_GRAD:
                 with torch.no_grad():
                     inputs = lm([text[i] for i in output_nodes]).to(config.device)
             else:
                 inputs = lm([text[i] for i in output_nodes]).to(config.device)
             # inputs = mfgs[0].srcdata['x']
-            print("Start gnn forward")
+            #print("Start gnn forward")
+            #print("inputs.size()", inputs.size())
             if GNN_USE_NO_GRAD:
                 with torch.no_grad():
                     predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
             else:
                 predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
-            print('location 1')
+            #print('location 1')
             labels = torch.flatten(labels)
-            print('location 2')
+            #print('location 2')
             # print(predictions.device, labels.device)
             loss = F.cross_entropy(predictions, labels)
             # loss = torch.tensor(0.)
-            print('location 3')
+            #print('location 3')
             opt.zero_grad()
-            print("Start backward prop")
+            #print("Start backward prop")
             loss.backward()
             opt.step()
 
@@ -233,5 +241,6 @@ for epoch in range(100):
         test_accuracy = sklearn.metrics.accuracy_score(labels, predictions)
 
         print('Epoch {} Valid Accuracy {}  Best Accuracy {} Test Accuracy {}'.format(epoch, val_accuracy, best_val_accuracy, test_accuracy))
+        wandb.log({"Epoch": epoch, "Val Accuracy": loss, "Best Accuracy": best_val_accuracy, "test accuracy": test_accuracy})
         writer.add_scalar('test/accuracy', test_accuracy, epoch)
 

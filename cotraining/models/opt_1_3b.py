@@ -4,7 +4,7 @@ import torch
 
 import datetime
 
-from transformers import OPTForCausalLM, GPT2Tokenizer
+from transformers import OPTForCausalLM, GPT2Tokenizer, AutoModelForCausalLM, AutoTokenizer, LlamaModel, OPTModel
 from transformers.models.deberta.modeling_deberta import ContextPooler
 #from .auto_checkpoint_deberta import DebertaModel
 
@@ -33,8 +33,8 @@ class opt_1_3b(torch.nn.Module):
         #self.tokenizer = AutoTokenizer.from_pretrained("microsoft/deberta-base")
 # Load model directly
         #self.model = DebertaModel.from_pretrained("microsoft/deberta-base")
-        self.model = OPTForCausalLM.from_pretrained("facebook/opt-1.3b")
-        self.tokenizer = GPT2Tokenizer.from_pretrained("facebook/opt-1.3b")
+        self.model = OPTModel.from_pretrained("facebook/opt-1.3b")
+        self.tokenizer = AutoTokenizer.from_pretrained("facebook/opt-1.3b")
         if config.use_param_free_pooler:
             self.pooler = NonParamPooler(config)
         else:

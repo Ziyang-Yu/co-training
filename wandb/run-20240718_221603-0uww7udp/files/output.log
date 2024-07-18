@@ -1,0 +1,24 @@
+start loading arxiv
+Downloading http://snap.stanford.edu/ogb/data/nodeproppred/arxiv.zip
+Downloaded 0.02 GB:  23%|████████████████████████████████████▊                                                                                                                        | 19/81 [00:01<00:02, 27.62it/s]
+Extracting dataset/arxiv.zip
+Loading necessary files...
+Downloaded 0.08 GB: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 81/81 [00:02<00:00, 31.98it/s]
+Processing...
+Processing graphs...
+Converting graphs into PyG objects...
+Saving...
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 11683.30it/s]
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 3956.89it/s]
+Done!
+Finish loading arxiv. Start loading lm and model
+/home/ericyu8817/co-training/env/lib/python3.8/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Traceback (most recent call last):
+  File "main.py", line 134, in <module>
+    model.load_history(node_cache)
+  File "/home/ericyu8817/co-training/cotraining/models/graphsage.py", line 63, in load_history
+    assert self.history.emb.shape == data.shape, f'need emb shape is {self.history.emb.shape} but given {data.shape}'
+AssertionError: need emb shape is torch.Size([2708, 50272]) but given torch.Size([2708, 2048])
+Finish loading lm and model
+Start loading cache

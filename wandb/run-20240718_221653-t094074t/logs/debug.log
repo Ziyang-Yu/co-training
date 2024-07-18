@@ -1,0 +1,28 @@
+2024-07-18 22:16:53,861 INFO    MainThread:22038 [wandb_setup.py:_flush():76] Current SDK version is 0.17.4
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_setup.py:_flush():76] Configure stats pid to 22038
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_setup.py:_flush():76] Loading settings from /root/.config/wandb/settings
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_setup.py:_flush():76] Loading settings from /home/ericyu8817/co-training/wandb/settings
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'main.py', 'program_abspath': '/home/ericyu8817/co-training/main.py', 'program': 'main.py'}
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_init.py:_log_setup():529] Logging user logs to /home/ericyu8817/co-training/wandb/run-20240718_221653-t094074t/logs/debug.log
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_init.py:_log_setup():530] Logging internal logs to /home/ericyu8817/co-training/wandb/run-20240718_221653-t094074t/logs/debug-internal.log
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_init.py:init():569] calling init triggers
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_init.py:init():576] wandb.init called with sweep_config: {}
+config: {'seed': 42, 'device': 'cuda', 'epoch': 2000, 'lm_type': 'facebook/opt-1.3b', 'lm_lr': 0, 'lm_max_length': 512, 'lm_weight_decay': 0.0001, 'lm_padding': True, 'lm_truncation': True, 'lm_requires_grad': True, 'pooler_hidden_size': 2048, 'pooler_dropout': 0.5, 'pooler_hidden_act': 'relu', 'num_nodes': 2708, 'num_node_features': 2048, 'gnn_h_feats': 2048, 'gnn_lr': 0.0005, 'gnn_weight_decay': 0, 'gnn_dropout': 0.5, 'gnn_requires_grad': True, 'gnn_num_layers': 7, 'gnn_use_residual': True, 'once_batch_size': 1024, 'once_shuffle': True, 'once_drop_last': True, 'train_batch_size': 64, 'train_shuffle': True, 'train_drop_last': True, 'valid_batch_size': 64, 'valid_shuffle': True, 'valid_drop_last': True, 'test_batch_size': 64, 'test_shuffle': True, 'test_drop_last': True, 'use_param_free_pooler': True, 'leading_alpha': 0.9, 'use_node_cache': True, 'node_cache': 'cache/warm_emb.pth', 'log_dir': 'log/exp-name', 'save_interval': 5, 'save_latest': True, 'resume': False}
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_init.py:init():619] starting backend
+2024-07-18 22:16:53,862 INFO    MainThread:22038 [wandb_init.py:init():623] setting up manager
+2024-07-18 22:16:53,863 INFO    MainThread:22038 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-07-18 22:16:53,864 INFO    MainThread:22038 [wandb_init.py:init():631] backend started and connected
+2024-07-18 22:16:53,867 INFO    MainThread:22038 [wandb_init.py:init():720] updated telemetry
+2024-07-18 22:16:53,881 INFO    MainThread:22038 [wandb_init.py:init():753] communicating run to backend with 90.0 second timeout
+2024-07-18 22:16:54,105 INFO    MainThread:22038 [wandb_run.py:_on_init():2402] communicating current version
+2024-07-18 22:16:54,207 INFO    MainThread:22038 [wandb_run.py:_on_init():2411] got version response 
+2024-07-18 22:16:54,208 INFO    MainThread:22038 [wandb_init.py:init():804] starting run threads in backend
+2024-07-18 22:16:56,516 INFO    MainThread:22038 [wandb_run.py:_console_start():2380] atexit reg
+2024-07-18 22:16:56,516 INFO    MainThread:22038 [wandb_run.py:_redirect():2235] redirect: wrap_raw
+2024-07-18 22:16:56,517 INFO    MainThread:22038 [wandb_run.py:_redirect():2300] Wrapping output streams.
+2024-07-18 22:16:56,517 INFO    MainThread:22038 [wandb_run.py:_redirect():2325] Redirects installed.
+2024-07-18 22:16:56,518 INFO    MainThread:22038 [wandb_init.py:init():847] run started, returning control to user process
+2024-07-18 22:17:14,817 WARNING MsgRouterThr:22038 [router.py:message_loop():77] message_loop has been closed

@@ -1,0 +1,10 @@
+
+start loading arxiv
+Traceback (most recent call last):
+  File "main.py", line 110, in <module>
+    graph, num_classes, text = load_data('ogbn-arxiv', use_dgl=True, use_text=True)
+  File "/home/ericyu8817/co-training/cotraining/data/load.py", line 64, in load_data
+    data, text = get_raw_text(use_text=True, seed=seed)
+  File "/home/ericyu8817/co-training/cotraining/data/load_arxiv.py", line 43, in get_raw_text_arxiv
+    t = 'Title: ' + ti + '\n' + 'Abstract: ' + ab
+KeyboardInterrupt

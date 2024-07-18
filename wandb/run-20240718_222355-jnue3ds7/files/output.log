@@ -1,0 +1,51 @@
+
+start loading cora
+Finish loading arxiv. Start loading lm and model
+/home/ericyu8817/co-training/env/lib/python3.8/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Finish loading lm and model
+Start loading cache
+Finish loading cache
+Start training
+Start lm forward
+  0%|                                                                                                                                                                                          | 0/25 [00:00<?, ?it/s]
+Start gnn forward
+inputs.size() torch.Size([64, 2048])
+location 1
+location 2
+location 3
+Start backward prop
+
+  4%|██████▏                                                                                                                                                    | 1/25 [00:07<02:49,  7.05s/it, loss=5.291, acc=0.078]
+Traceback (most recent call last):
+  File "main.py", line 172, in <module>
+    inputs = lm([text[i] for i in output_nodes]).to(config.device)
+  File "/home/ericyu8817/co-training/cotraining/models/opt_1_3b.py", line 70, in __call__
+    return self.forward(data)
+  File "/home/ericyu8817/co-training/cotraining/models/opt_1_3b.py", line 62, in forward
+    encoder_layer = self.model(**input)[0]
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/transformers/models/opt/modeling_opt.py", line 971, in forward
+    decoder_outputs = self.decoder(
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/transformers/models/opt/modeling_opt.py", line 886, in forward
+    layer_outputs = decoder_layer(
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/transformers/models/opt/modeling_opt.py", line 527, in forward
+    hidden_states, self_attn_weights, present_key_value = self.self_attn(
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/ericyu8817/co-training/env/lib/python3.8/site-packages/transformers/models/opt/modeling_opt.py", line 209, in forward
+    attn_weights, torch.tensor(torch.finfo(attn_weights.dtype).min, device=attn_weights.device)
+KeyboardInterrupt

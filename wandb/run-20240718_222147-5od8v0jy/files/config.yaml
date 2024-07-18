@@ -1,0 +1,168 @@
+wandb_version: 1
+
+seed:
+  desc: null
+  value: 42
+device:
+  desc: null
+  value: cuda
+epoch:
+  desc: null
+  value: 2000
+lm_type:
+  desc: null
+  value: facebook/opt-1.3b
+lm_lr:
+  desc: null
+  value: 0
+lm_max_length:
+  desc: null
+  value: 512
+lm_weight_decay:
+  desc: null
+  value: 0.0001
+lm_padding:
+  desc: null
+  value: true
+lm_truncation:
+  desc: null
+  value: true
+lm_requires_grad:
+  desc: null
+  value: true
+pooler_hidden_size:
+  desc: null
+  value: 2048
+pooler_dropout:
+  desc: null
+  value: 0.5
+pooler_hidden_act:
+  desc: null
+  value: relu
+num_nodes:
+  desc: null
+  value: 2708
+num_node_features:
+  desc: null
+  value: 2048
+gnn_h_feats:
+  desc: null
+  value: 2048
+gnn_lr:
+  desc: null
+  value: 0.0005
+gnn_weight_decay:
+  desc: null
+  value: 0
+gnn_dropout:
+  desc: null
+  value: 0.5
+gnn_requires_grad:
+  desc: null
+  value: true
+gnn_num_layers:
+  desc: null
+  value: 7
+gnn_use_residual:
+  desc: null
+  value: true
+once_batch_size:
+  desc: null
+  value: 1024
+once_shuffle:
+  desc: null
+  value: true
+once_drop_last:
+  desc: null
+  value: true
+train_batch_size:
+  desc: null
+  value: 64
+train_shuffle:
+  desc: null
+  value: true
+train_drop_last:
+  desc: null
+  value: true
+valid_batch_size:
+  desc: null
+  value: 64
+valid_shuffle:
+  desc: null
+  value: true
+valid_drop_last:
+  desc: null
+  value: true
+test_batch_size:
+  desc: null
+  value: 64
+test_shuffle:
+  desc: null
+  value: true
+test_drop_last:
+  desc: null
+  value: true
+use_param_free_pooler:
+  desc: null
+  value: true
+leading_alpha:
+  desc: null
+  value: 0.9
+use_node_cache:
+  desc: null
+  value: true
+node_cache:
+  desc: null
+  value: cache/warm_emb.pth
+log_dir:
+  desc: null
+  value: log/exp-name
+save_interval:
+  desc: null
+  value: 5
+save_latest:
+  desc: null
+  value: true
+resume:
+  desc: null
+  value: false
+_wandb:
+  desc: null
+  value:
+    python_version: 3.8.19
+    cli_version: 0.17.4
+    framework: huggingface
+    huggingface_version: 4.40.2
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1721341307
+    t:
+      1:
+      - 1
+      - 5
+      - 11
+      - 49
+      - 53
+      - 55
+      - 71
+      - 76
+      - 77
+      2:
+      - 1
+      - 5
+      - 11
+      - 49
+      - 53
+      - 55
+      - 71
+      - 76
+      - 77
+      3:
+      - 16
+      - 23
+      4: 3.8.19
+      5: 0.17.4
+      6: 4.40.2
+      8:
+      - 5
+      13: linux-x86_64
