@@ -9,3 +9,4 @@ pretrained_models/
 Graph-LLM/
 pyg_autoscale/
 cache/
+wandb/

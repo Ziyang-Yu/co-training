@@ -1,1 +1,0 @@
-{"Epoch": 57, "Val Accuracy": 0.302734375, "Best Accuracy": 0.318359375, "test accuracy": 0.28125, "_timestamp": 1721366806.5575125, "_runtime": 13201.92837357521, "_step": 57, "_wandb": {"runtime": 13247}}
