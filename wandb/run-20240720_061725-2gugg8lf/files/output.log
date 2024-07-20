@@ -1,0 +1,51 @@
+
+start loading cora
+Finish loading cora. Start loading lm and model
+/home/ericyu8817/co-training/env/lib/python3.8/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Finish loading lm and model
+Start loading cache
+Finish loading cache
+Start training
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+100%|█████████████████████████████████████████████████████████████████████████████████| 25/25 [01:53<00:00,  4.56s/it, loss=2.940, acc=0.172]
+
+
+
+
+
+
+
+
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████| 8/8 [00:35<00:00,  4.45s/it]
+
+
+
+
+
+
+

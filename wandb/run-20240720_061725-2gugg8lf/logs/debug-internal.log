@@ -1,0 +1,406 @@
+2024-07-20 06:17:25,908 INFO    StreamThr :5194 [internal.py:wandb_internal():85] W&B internal server running at pid: 5194, started at: 2024-07-20 06:17:25.907964
+2024-07-20 06:17:25,910 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status
+2024-07-20 06:17:25,913 INFO    WriterThread:5194 [datastore.py:open_for_write():87] open: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/run-2gugg8lf.wandb
+2024-07-20 06:17:25,913 DEBUG   SenderThread:5194 [sender.py:send():379] send: header
+2024-07-20 06:17:25,928 DEBUG   SenderThread:5194 [sender.py:send():379] send: run
+2024-07-20 06:17:26,107 INFO    SenderThread:5194 [dir_watcher.py:__init__():211] watching files in: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files
+2024-07-20 06:17:26,107 INFO    SenderThread:5194 [sender.py:_start_run_threads():1188] run started: 2gugg8lf with start time 1721456245.907705
+2024-07-20 06:17:26,116 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: check_version
+2024-07-20 06:17:26,117 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: check_version
+2024-07-20 06:17:26,220 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: run_start
+2024-07-20 06:17:26,227 DEBUG   HandlerThread:5194 [system_info.py:__init__():26] System info init
+2024-07-20 06:17:26,227 DEBUG   HandlerThread:5194 [system_info.py:__init__():41] System info init done
+2024-07-20 06:17:26,227 INFO    HandlerThread:5194 [system_monitor.py:start():194] Starting system monitor
+2024-07-20 06:17:26,227 INFO    SystemMonitor:5194 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-07-20 06:17:26,227 INFO    HandlerThread:5194 [system_monitor.py:probe():214] Collecting system info
+2024-07-20 06:17:26,228 INFO    SystemMonitor:5194 [interfaces.py:start():188] Started cpu monitoring
+2024-07-20 06:17:26,228 INFO    SystemMonitor:5194 [interfaces.py:start():188] Started disk monitoring
+2024-07-20 06:17:26,229 INFO    SystemMonitor:5194 [interfaces.py:start():188] Started gpu monitoring
+2024-07-20 06:17:26,229 INFO    SystemMonitor:5194 [interfaces.py:start():188] Started memory monitoring
+2024-07-20 06:17:26,231 INFO    SystemMonitor:5194 [interfaces.py:start():188] Started network monitoring
+2024-07-20 06:17:26,241 DEBUG   HandlerThread:5194 [system_info.py:probe():152] Probing system
+2024-07-20 06:17:26,246 DEBUG   HandlerThread:5194 [system_info.py:_probe_git():137] Probing git
+2024-07-20 06:17:26,256 DEBUG   HandlerThread:5194 [system_info.py:_probe_git():145] Probing git done
+2024-07-20 06:17:26,256 DEBUG   HandlerThread:5194 [system_info.py:probe():200] Probing system done
+2024-07-20 06:17:26,256 DEBUG   HandlerThread:5194 [system_monitor.py:probe():223] {'os': 'Linux-5.10.0-31-cloud-amd64-x86_64-with-glibc2.17', 'python': '3.8.19', 'heartbeatAt': '2024-07-20T06:17:26.241089', 'startedAt': '2024-07-20T06:17:25.904023', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': 'main.py', 'codePathLocal': 'main.py', 'codePath': 'main.py', 'git': {'remote': 'git@github.com:Ziyang-Yu/co-training.git', 'commit': 'bbf1a823bc3a2cbc5513b35a2871ee3397fb15ca'}, 'email': None, 'root': '/home/ericyu8817/co-training', 'host': 'instance-20240718-212835', 'username': 'root', 'executable': '/home/ericyu8817/co-training/env/bin/python', 'cpu_count': 6, 'cpu_count_logical': 12, 'cpu_freq': {'current': 2200.1179999999995, 'min': 0.0, 'max': 0.0}, 'cpu_freq_per_core': [{'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}, {'current': 2200.118, 'min': 0.0, 'max': 0.0}], 'disk': {'/': {'total': 295.0449905395508, 'used': 163.17707061767578}}, 'gpu': 'NVIDIA A100-SXM4-40GB', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA A100-SXM4-40GB', 'memory_total': 42949672960}], 'memory': {'total': 83.48261260986328}}
+2024-07-20 06:17:26,256 INFO    HandlerThread:5194 [system_monitor.py:probe():224] Finished collecting system info
+2024-07-20 06:17:26,256 INFO    HandlerThread:5194 [system_monitor.py:probe():227] Publishing system info
+2024-07-20 06:17:26,257 DEBUG   HandlerThread:5194 [system_info.py:_save_conda():209] Saving list of conda packages installed into the current environment
+2024-07-20 06:17:27,108 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_created():271] file/dir created: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/conda-environment.yaml
+2024-07-20 06:17:28,426 DEBUG   HandlerThread:5194 [system_info.py:_save_conda():224] Saving conda packages done
+2024-07-20 06:17:28,427 INFO    HandlerThread:5194 [system_monitor.py:probe():229] Finished publishing system info
+2024-07-20 06:17:28,432 DEBUG   SenderThread:5194 [sender.py:send():379] send: files
+2024-07-20 06:17:28,432 INFO    SenderThread:5194 [sender.py:_save_file():1454] saving file wandb-metadata.json with policy now
+2024-07-20 06:17:28,524 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: python_packages
+2024-07-20 06:17:28,524 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: python_packages
+2024-07-20 06:17:28,524 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:17:28,525 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:17:28,527 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:28,601 DEBUG   SenderThread:5194 [sender.py:send():379] send: telemetry
+2024-07-20 06:17:28,700 INFO    wandb-upload_0:5194 [upload_job.py:push():130] Uploaded file /tmp/tmps7zxj9pzwandb/kng0x2ch-wandb-metadata.json
+2024-07-20 06:17:29,108 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/conda-environment.yaml
+2024-07-20 06:17:29,108 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_created():271] file/dir created: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/wandb-metadata.json
+2024-07-20 06:17:29,108 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_created():271] file/dir created: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:17:29,108 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_created():271] file/dir created: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/requirements.txt
+2024-07-20 06:17:29,566 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:31,108 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:17:31,603 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:17:32,433 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:32,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:33,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:34,442 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:35,110 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:17:35,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:36,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:36,685 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:17:37,111 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:17:37,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:38,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:39,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:40,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:41,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:42,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:42,619 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:17:43,112 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:17:43,443 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:43,524 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:17:43,525 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:17:44,444 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:45,444 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:46,444 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:47,114 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:17:47,444 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:48,444 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:48,460 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:17:49,444 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:50,444 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:51,115 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:17:51,444 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:52,445 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:53,445 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:53,525 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:17:54,445 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:55,445 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:56,445 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:57,117 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:17:57,445 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:58,445 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:17:58,524 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:17:58,525 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:17:58,644 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:17:59,118 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/config.yaml
+2024-07-20 06:17:59,446 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:00,446 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:01,118 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:01,446 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:02,446 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:03,446 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:04,019 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:18:04,446 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:05,120 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:05,446 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:06,446 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:07,447 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:08,447 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:09,121 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:09,447 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:09,526 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:18:10,447 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:11,447 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:12,447 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:13,122 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:13,447 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:13,524 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:18:13,525 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:18:14,447 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:14,625 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:18:15,447 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:16,448 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:17,124 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:17,448 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:18,448 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:19,448 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:20,448 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:20,480 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:18:21,125 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:21,448 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:22,448 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:23,448 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:24,448 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:25,448 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:26,231 DEBUG   SystemMonitor:5194 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-07-20 06:18:26,232 DEBUG   SenderThread:5194 [sender.py:send():379] send: stats
+2024-07-20 06:18:26,232 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:18:26,449 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:27,127 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:27,449 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:28,449 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:28,525 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:18:28,525 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:18:29,449 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:30,449 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:31,128 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:31,449 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:32,144 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:18:32,449 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:33,449 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:34,450 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:35,129 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:35,450 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:36,450 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:37,450 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:37,977 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:18:38,450 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:39,450 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:40,450 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:41,131 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:41,451 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:42,451 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:43,451 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:43,525 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:18:43,525 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:18:43,571 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:18:44,451 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:45,133 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:45,451 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:46,451 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:47,451 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:48,451 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:48,681 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:18:49,134 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:49,452 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:50,452 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:51,452 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:52,452 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:53,135 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:53,452 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:54,452 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:54,527 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:18:55,452 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:56,233 DEBUG   SenderThread:5194 [sender.py:send():379] send: stats
+2024-07-20 06:18:56,452 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:57,136 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:18:57,453 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:58,453 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:58,525 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:18:58,525 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:18:59,453 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:18:59,569 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:00,453 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:01,453 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:02,138 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:19:02,453 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:03,453 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:04,454 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:05,454 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:05,527 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:06,454 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:07,454 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:08,140 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:19:08,454 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:09,454 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:10,454 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:10,527 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:11,455 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:12,141 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:19:12,455 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:13,455 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:13,525 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:19:13,525 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:19:14,455 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:15,502 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:16,462 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:16,462 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:17,462 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:18,143 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:19:18,462 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:19,462 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:20,462 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:21,463 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:22,145 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:19:22,295 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:22,463 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:23,463 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:24,463 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:25,463 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:26,146 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:19:26,233 DEBUG   SenderThread:5194 [sender.py:send():379] send: stats
+2024-07-20 06:19:26,463 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:27,463 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:28,234 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:28,463 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:28,525 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:19:28,525 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:19:29,463 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:29,607 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: partial_history
+2024-07-20 06:19:29,608 DEBUG   SenderThread:5194 [sender.py:send():379] send: history
+2024-07-20 06:19:29,608 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: summary_record
+2024-07-20 06:19:29,610 INFO    SenderThread:5194 [sender.py:_save_file():1454] saving file wandb-summary.json with policy end
+2024-07-20 06:19:30,148 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_created():271] file/dir created: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/wandb-summary.json
+2024-07-20 06:19:30,464 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:31,464 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:32,148 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:19:32,464 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:33,481 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:33,527 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:34,481 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:35,481 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:36,503 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:19:38,528 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:43,529 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:48,530 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:53,531 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:56,234 DEBUG   SenderThread:5194 [sender.py:send():379] send: stats
+2024-07-20 06:19:59,235 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:19:59,387 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:19:59,388 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:19:59,431 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:00,388 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:01,388 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:02,388 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:03,390 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:04,286 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:20:04,412 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:05,411 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:06,411 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:09,412 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:20:14,413 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:20:19,414 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:20:24,414 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:20:26,235 DEBUG   SenderThread:5194 [sender.py:send():379] send: stats
+2024-07-20 06:20:29,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:20:29,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:29,142 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:20:30,140 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:30,256 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:20:31,140 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:32,140 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:32,171 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:20:33,140 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:34,140 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:34,172 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:20:35,140 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:36,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:36,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:20:37,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:38,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:39,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:40,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:40,173 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:20:41,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:42,081 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:20:42,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:43,142 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:44,140 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:20:44,140 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:20:44,174 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:20:44,182 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:45,142 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:46,142 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:47,142 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:47,895 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:20:48,142 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:48,176 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:20:49,142 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:50,142 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:51,143 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:52,143 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:53,143 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:53,709 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:20:54,143 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:54,178 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:20:55,143 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:56,143 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:56,235 DEBUG   SenderThread:5194 [sender.py:send():379] send: stats
+2024-07-20 06:20:57,143 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:58,143 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:58,179 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:20:59,140 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:20:59,140 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:20:59,182 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:20:59,254 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:00,143 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:01,144 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:02,144 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:02,180 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:21:03,144 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:04,144 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:04,732 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:05,144 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:06,144 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:06,181 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:21:07,145 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:08,145 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:09,145 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:10,141 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:10,145 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:11,149 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:12,149 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:15,142 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:20,143 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:25,144 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:26,236 DEBUG   SenderThread:5194 [sender.py:send():379] send: stats
+2024-07-20 06:21:30,237 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:34,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:34,505 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:21:34,505 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:21:35,503 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:35,607 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:36,191 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:21:36,503 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:37,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:38,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:39,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:40,192 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:21:40,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:41,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:41,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:42,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:43,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:44,194 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:21:44,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:45,505 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:46,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:46,505 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:47,505 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:48,505 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:49,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:21:49,504 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:21:49,546 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:50,196 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:21:50,505 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:51,505 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:51,561 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:52,506 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:53,506 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:54,197 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:21:54,506 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:55,506 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:56,237 DEBUG   SenderThread:5194 [sender.py:send():379] send: stats
+2024-07-20 06:21:56,506 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:56,564 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:21:57,506 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:58,199 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:21:58,506 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:21:59,506 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:00,506 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:01,507 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:02,379 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:22:02,507 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:03,507 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:04,201 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:22:04,504 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-20 06:22:04,504 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: stop_status
+2024-07-20 06:22:04,546 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:05,507 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:06,507 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:07,507 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:08,191 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: status_report
+2024-07-20 06:22:08,202 INFO    Thread-12 :5194 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/ericyu8817/co-training/wandb/run-20240720_061725-2gugg8lf/files/output.log
+2024-07-20 06:22:08,507 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:09,507 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:10,508 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-20 06:22:11,047 DEBUG   HandlerThread:5194 [handler.py:handle_request():158] handle_request: partial_history
+2024-07-20 06:22:11,048 DEBUG   SenderThread:5194 [sender.py:send():379] send: history
+2024-07-20 06:22:11,048 DEBUG   SenderThread:5194 [sender.py:send_request():406] send_request: summary_record
+2024-07-20 06:22:11,049 INFO    SenderThread:5194 [sender.py:_save_file():1454] saving file wandb-summary.json with policy end

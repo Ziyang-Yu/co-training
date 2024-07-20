@@ -161,6 +161,8 @@ for epoch in range(100):
     model.train()
     
     with tqdm.tqdm(train_dataloader) as tq:
+        total_loss = 0.
+        total_num = 0
         for step, (input_nodes, output_nodes, mfgs) in enumerate(tq):
             # print(output_nodes)
             # inputs = [text[i] for i in output_nodes]
@@ -193,14 +195,17 @@ for epoch in range(100):
             opt.step()
 
             accuracy = sklearn.metrics.accuracy_score(labels.cpu().numpy(), predictions.argmax(1).detach().cpu().numpy())
-
+            
+            total_loss += loss.item()
+            total_num += predictions.shape[0]
             tq.set_postfix({'loss': '%.03f' % loss.item(), 'acc': '%.03f' % accuracy}, refresh=False)
-            wandb.log({'train/loss', loss.item()/predictions.shape[0].item()})
+            #wandb.log({'train-loss': loss.item()/predictions.shape[0]})
             writer.add_scalar('train/loss', loss.item(), epoch * len(train_dataloader) + step)
             writer.add_scalar('train/accuracy', accuracy, epoch * len(train_dataloader) + step)
-
+            
             del input_nodes, output_nodes, mfgs, inputs, labels, predictions, loss
             torch.cuda.empty_cache()
+        wandb.log({'train-loss': total_loss/total_num})
     if config.save_interval > 0 and epoch % config.save_interval == 0:
         saver(model, lm, f'epoch_{epoch}')
     if config.save_latest:
