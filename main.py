@@ -61,11 +61,11 @@ config = {
     "num_nodes": 2708,
     "num_node_features": 2048,
     "gnn_h_feats": 2048,
-    "gnn_lr": 0.1,
+    "gnn_lr": 0.001,
     "gnn_weight_decay": 0,
     "gnn_dropout": 0.5,
     "gnn_requires_grad": True,
-    "gnn_num_layers":7,
+    "gnn_num_layers":2,
     "gnn_use_residual": True,
 
     "once_batch_size": 1024,
@@ -195,6 +195,7 @@ for epoch in range(100):
             accuracy = sklearn.metrics.accuracy_score(labels.cpu().numpy(), predictions.argmax(1).detach().cpu().numpy())
 
             tq.set_postfix({'loss': '%.03f' % loss.item(), 'acc': '%.03f' % accuracy}, refresh=False)
+            wandb.log({'train/loss', loss.item()/predictions.shape[0].item()})
             writer.add_scalar('train/loss', loss.item(), epoch * len(train_dataloader) + step)
             writer.add_scalar('train/accuracy', accuracy, epoch * len(train_dataloader) + step)
 
@@ -241,6 +242,6 @@ for epoch in range(100):
         test_accuracy = sklearn.metrics.accuracy_score(labels, predictions)
 
         print('Epoch {} Valid Accuracy {}  Best Accuracy {} Test Accuracy {}'.format(epoch, val_accuracy, best_val_accuracy, test_accuracy))
-        wandb.log({"Epoch": epoch, "Val Accuracy": loss, "Best Accuracy": best_val_accuracy, "test accuracy": test_accuracy})
+        wandb.log({"Epoch": epoch, "Val Accuracy": val_accuracy, "Best Accuracy": best_val_accuracy, "test accuracy": test_accuracy})
         writer.add_scalar('test/accuracy', test_accuracy, epoch)
 

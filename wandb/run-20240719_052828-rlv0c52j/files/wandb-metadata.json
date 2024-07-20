@@ -1,0 +1,108 @@
+{
+    "os": "Linux-5.10.0-30-cloud-amd64-x86_64-with-glibc2.17",
+    "python": "3.8.19",
+    "heartbeatAt": "2024-07-19T05:28:28.797669",
+    "startedAt": "2024-07-19T05:28:28.475335",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "main.py",
+    "codePathLocal": "main.py",
+    "codePath": "main.py",
+    "git": {
+        "remote": "git@github.com:Ziyang-Yu/co-training.git",
+        "commit": "d598f2ccddb04b836b526942dbb857ae10c0b67c"
+    },
+    "email": null,
+    "root": "/home/ericyu8817/co-training",
+    "host": "instance-20240718-212835",
+    "username": "root",
+    "executable": "/home/ericyu8817/co-training/env/bin/python",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 2200.1179999999995,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2200.118,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 295.0449905395508,
+            "used": 125.77802276611328
+        }
+    },
+    "gpu": "NVIDIA A100-SXM4-40GB",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA A100-SXM4-40GB",
+            "memory_total": 42949672960
+        }
+    ],
+    "memory": {
+        "total": 83.4826431274414
+    }
+}
