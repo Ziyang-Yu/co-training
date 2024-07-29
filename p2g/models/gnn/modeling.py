@@ -162,7 +162,7 @@ class NonParamPooler(Module):
         self.output_dim = config.gnn_node_features
 
     def forward(self, hidden_states):
-        context_token = hidden_states[:, 0]
+        context_token = hidden_states[:, -1]
         if context_token.shape[1] == self.output_dim:
             return context_token
         elif context_token.shape[1] > self.output_dim:
@@ -188,14 +188,18 @@ class GNNLoss(Module):
 
     def save_ckpt(self):
         name2params = dict(self.module.named_parameters())
+        warm_emb = self.module.history.emb
+        # also, save the emb 
         torch.save(
-            name2params,
+            (name2params, warm_emb),
             self.config.gnn_ckpt_save_path + f"/{self._special_name}.pth",
         )
 
+
     def load_ckpt(self, path=None):
-        name2params = torch.load(self.config.gnn_ckpt_save_path + f"/{self._special_name}.pth")
+        name2params, warm_emb = torch.load(self.config.gnn_ckpt_save_path + f"/{self._special_name}.pth")
         self.module.load_state_dict(name2params, strict=False)
+        self.module.history.emb.copy_(warm_emb)
 
     def load_warm_emb(self):
         warmemb = torch.load(self.config.gnn_ckpt_path + f"/{self._special_emb}.pth")

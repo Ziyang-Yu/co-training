@@ -72,14 +72,14 @@ config = {
     "once_shuffle": True,
     "once_drop_last": True,
 
-    "train_batch_size": 64,
+    "train_batch_size": 32,
     "train_shuffle": True,
     "train_drop_last": True,
-    "valid_batch_size": 64,
+    "valid_batch_size": 32,
     "valid_shuffle": True,
     "valid_drop_last": True,
 
-    "test_batch_size": 64,
+    "test_batch_size": 32,
     "test_shuffle": True,
     "test_drop_last": True,
 
@@ -93,12 +93,12 @@ config = {
     "save_latest": True,
     "resume": False,
 }
-wandb.init(
+#wandb.init(
     # Set the project where this run will be logged
-    project="co-training opt1.3b cora",
+#    project="co-training opt1.3b cora",
     # Track hyperparameters and run metadata
-    config=config,
-)
+#    config=config,
+#)
 config = dict_to_namespace(config)
 
 writer, saver, loader = save_exp(config)
@@ -205,7 +205,7 @@ for epoch in range(100):
             
             del input_nodes, output_nodes, mfgs, inputs, labels, predictions, loss
             torch.cuda.empty_cache()
-        wandb.log({'train-loss': total_loss/total_num})
+        #wandb.log({'train-loss': total_loss/total_num})
     if config.save_interval > 0 and epoch % config.save_interval == 0:
         saver(model, lm, f'epoch_{epoch}')
     if config.save_latest:
@@ -247,6 +247,6 @@ for epoch in range(100):
         test_accuracy = sklearn.metrics.accuracy_score(labels, predictions)
 
         print('Epoch {} Valid Accuracy {}  Best Accuracy {} Test Accuracy {}'.format(epoch, val_accuracy, best_val_accuracy, test_accuracy))
-        wandb.log({"Epoch": epoch, "Val Accuracy": val_accuracy, "Best Accuracy": best_val_accuracy, "test accuracy": test_accuracy})
+        #wandb.log({"Epoch": epoch, "Val Accuracy": val_accuracy, "Best Accuracy": best_val_accuracy, "test accuracy": test_accuracy})
         writer.add_scalar('test/accuracy', test_accuracy, epoch)
 

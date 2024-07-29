@@ -18,10 +18,10 @@ gnn_leading_alpha: 0.1
 gnn_dtype_name: float16
 gnn_dropout: 0.1
 gnn_neighbor_num: 10
-gnn_ckpt_path: /home/ericyu8817/co-training/deepspeed-test/demos/opt-1.3b/
+gnn_ckpt_path: /home/jupyter/deepspeed-test/demos/opt-1.3b/
 gnn_ckpt_save_path: ckpts/demos/gnn/
 dataset_name: cora
-dataset_path: /home/ericyu8817/co-training/dataset/
+dataset_path: /home/ubuntu/co-training/dataset/
 dataset_tokenized_ids_cache: cache/cora/tokenized_ids_cache.pkl
 dataset_padding_width: 512
 dataloader_type: dgl

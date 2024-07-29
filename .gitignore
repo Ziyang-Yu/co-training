@@ -10,3 +10,6 @@ Graph-LLM/
 pyg_autoscale/
 cache/
 wandb/
+deberta_pretrained_graphsage_model.pt
+arxiv_deberta.pt
+cache_emb_opt_1_3b.pth

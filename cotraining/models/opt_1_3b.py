@@ -16,7 +16,7 @@ class NonParamPooler(torch.nn.Module):
     def forward(self, hidden_states):
         # We "pool" the model by simply taking the hidden state corresponding
         # to the first token.
-        context_token = hidden_states[:, 0]
+        context_token = hidden_states[:, -1]
         return context_token
 
     @property
