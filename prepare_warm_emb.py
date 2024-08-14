@@ -1,14 +1,44 @@
 import argparse
-
-import torch
-from tqdm import tqdm
-from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaModel, OPTModel
-
+#import dgl
+#import torch
+#from tqdm import tqdm
+#from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaModel, OPTModel
+#from torch_geometric.utils import to_dgl
 from p2g.config import build_p2g_config
-from p2g.datasets.dgl.dgl_text_loader import load_dgl_dataset
-from p2g.models.gnn.modeling import NonParamPooler
+#from p2g.datasets.dgl.dgl_text_loader import load_dgl_dataset
+#from p2g.models.gnn.modeling import NonParamPooler
 #from p2g.models.opt.modeling import OPTEmb, OPTHead
-from cotraining.models import llama2_7b
+#from cotraining.models import llama2_7b
+from vllm import LLM
+
+#torch.multiprocessing.set_start_method('spawn')
+#import time
+
+def load_data(config, seed=0):
+    dataset = config.dataset_name
+    dataset_path = config.dataset_path
+    if dataset == "cora":
+        from p2g.datasets.dgl.cora import get_raw_text_cora as get_raw_text
+
+        num_classes = 7
+    elif dataset == "ogbn-arxiv":
+        from p2g.datasets.dgl.arxiv import get_raw_text_arxiv as get_raw_text
+
+        num_classes = 40
+    else:
+        raise ValueError(f"Error: Dataset {dataset} not supported")
+    data, text = get_raw_text(dataset_path, use_text=True, seed=seed)
+    data = to_dgl(data)
+    return data, num_classes, text
+
+
+def load_dgl_dataset(config):
+    graph, num_classes, text = load_data(config)
+    graph = dgl.to_bidirected(graph, copy_ndata=True)
+    graph = dgl.remove_self_loop(graph)
+    graph = dgl.add_self_loop(graph)
+    return graph, num_classes, text
+
 
 def get_emb(model, text_list, padding_length, batch_size=1):
     # encoder_layer = self.model(**input)[0]
@@ -32,9 +62,11 @@ def get_emb(model, text_list, padding_length, batch_size=1):
             #pooled_output = pooler(encoder_layer).cpu()
             #print(pooled_output.shape)
             #outputs.append(pooled_output)
-            outputs.append(model(text_list_batch))
+#            print(text_list_batch)
+            outputs.append(model(text_list_batch)[0].detail.hidden_states)
+#            time.sleep(1)
     full_emb = torch.cat(outputs, dim=0)
-    return full_emb
+#    return full_emb
 
 
 def main():
@@ -47,7 +79,7 @@ def main():
 
     p2gconfig = build_p2g_config(args.config_path)
     padding_length = p2gconfig.dataset_padding_width
-    model = llama2_7b()
+    #model = llama2_7b()
     #model = (
     #    OPTModel.from_pretrained(args.model_name)
     #    if args.lm_type == "opt"
@@ -58,7 +90,11 @@ def main():
     #tokenizer.pad_token = tokenizer.eos_token if args.lm_type == "llama" else tokenizer.pad_token
     #graph, num_classes, text = load_dgl_dataset(p2gconfig)
     #text_list = text
-    emb = get_emb(model, text_list, padding_length)
+    #print(111111111111111111111111111111111111)
+    if args.lm_type == "llama":
+        model = LLM("meta-llama/Llama-2-7b-hf", tensor_parallel_size=4)
+    #print(22222222222222222222222222222222)
+    emb = get_emb(model, ['set joasjfof'], padding_length)
     torch.save(emb, args.output_dir + "/warm_emb.pth")
 
 
