@@ -7,7 +7,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, LlamaModel, OPTMod
 from p2g.config import build_p2g_config
 from p2g.datasets.dgl.dgl_text_loader import load_dgl_dataset
 from p2g.models.gnn.modeling import NonParamPooler
-from p2g.models.opt.modeling import OPTEmb, OPTHead
+#from p2g.models.opt.modeling import OPTEmb, OPTHead
 
 
 def get_emb(model, tokenizer, text_list, pooler, padding_length, batch_size=16):

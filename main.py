@@ -16,8 +16,9 @@ import sklearn
 import numpy as np
 import dgl
 import wandb
+from transformers import LlamaTokenizer, LlamaForCausalLM
 
-from cotraining import load_data, graphsage, opt_1_3b, init_dataloader, seed, save_exp
+from cotraining import load_data, graphsage, llama2_7b, init_dataloader, seed, save_exp
 
 
 
@@ -47,7 +48,7 @@ config = {
     "device": 'cuda',
     "epoch": 2000,
 
-    "lm_type": 'facebook/opt-1.3b',
+    "lm_type": 'meta-llama/Llama-2-7b',
     "lm_lr": 0,
     "lm_max_length": 512,
     "lm_weight_decay": 1e-4,
@@ -114,7 +115,7 @@ graph = dgl.remove_self_loop(graph)
 graph = dgl.add_self_loop(graph)
 
 print("Finish loading cora. Start loading lm and model")
-lm = opt_1_3b(config=config).to(config.device)
+lm = llama2_7b(config=config).to(config.device)
 model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual).to(config.device)
 print("Finish loading lm and model")
 if config.resume:
