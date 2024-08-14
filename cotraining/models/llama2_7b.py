@@ -2,9 +2,11 @@ from typing import List
 
 import torch
 
-from transformers import BertTokenizer, BertModel, AutoTokenizer, AutoModel, PreTrainedModel
-from transformers.models.deberta.modeling_deberta import ContextPooler
-from .auto_checkpoint_deberta import DebertaModel
+from vllm import LLM, SamplingParams
+
+#from transformers import BertTokenizer, BertModel, AutoTokenizer, AutoModel, PreTrainedModel
+#from transformers.models.deberta.modeling_deberta import ContextPooler
+#from .auto_checkpoint_deberta import DebertaModel
 #from transformers import LlamaTokenizer, LlamaForCausalLM
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -31,21 +33,23 @@ class NonParamPooler(torch.nn.Module):
 
 class llama2_7b(torch.nn.Module):
 
-    def __init__(self, config):
+    def __init__(self):
         super().__init__()
         self.__name__ = 'meta-llama/Llama-2-7b'
         self.__num_node_features__ = 768 
         self.device = 'cpu'
         #self.tokenizer = LlamaTokenizer.from_pretrained("meta-llama/Llama-2-7b")
 # Load model directly
-        self.tokenizer = AutoTokenizer.from_pretrained(model_id)
-        self.model =AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', torch_dtype=torch.float16)
+        self.llm = LLM(model=model_id, tensor_parallel_size=4)
+        #self.tokenizer = AutoTokenizer.from_pretrained(model_id)
+        #self.model =AutoModelForCausalLM.from_pretrained(model_id, device_map='auto', torch_dtype=torch.float16)
         #self.model = LlamaForCausalLM.from_pretrained("meta-llama/Llama-2-7b")
-        if config.use_param_free_pooler:
-            self.pooler = NonParamPooler(config)
-        else:
-            self.pooler = ContextPooler(config)
-        self.config = config
+        self.sampling_params = SamplingParams(max_tokens=1)
+        #if config.use_param_free_pooler:
+        #    self.pooler = NonParamPooler(config)
+        #else:
+        #    self.pooler = ContextPooler(config)
+        #self.config = config
         # self.model = DebertaModel.from_pretrained("microsoft/deberta-base")
         
         # self.__output_dim__ = self.__model__.
@@ -57,17 +61,20 @@ class llama2_7b(torch.nn.Module):
     def num_node_features(self) -> int:
         return self.__num_node_features__
 
-    def to(self, device) -> None:
-        self.model = self.model.to(device)
-        self.pooler = self.pooler.to(device)
-        self.device = device
-        return self
+    #def to(self, device) -> None:
+        #self.llm = self.llm.to(device)
+        #self.pooler = self.pooler.to(device)
+        #self.device = device
+        #return self
 
     def forward(self, texts: List[str]) -> torch.Tensor:
-        input = self.tokenizer(texts, padding=self.config.lm_padding, truncation=self.config.lm_truncation, max_length=self.config.lm_max_length, return_tensors='pt').to(self.device)
-        encoder_layer = self.model(**input)[0]
-        pooled_output = self.pooler(encoder_layer)
-        return pooled_output
+        #input = self.tokenizer(texts, padding=self.config.lm_padding, truncation=self.config.lm_truncation, max_length=self.config.lm_max_length, return_tensors='pt').to(self.device)
+        #encoder_layer = self.model(**input)[0]
+        #pooled_output = self.pooler(encoder_layer)
+        #return pooled_output
+        outputs = self.llm.generate(texts, self.sampling_params)
+        print(output[0].detail.hidden_states.shape)
+
 
     def __call__(self, data) -> torch.Tensor:
         if isinstance(data, str):
