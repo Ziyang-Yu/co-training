@@ -27,7 +27,7 @@ def get_emb(model, tokenizer, text_list, pooler, padding_length, batch_size=1):
             )
             # move input to cuda
             for k, v in input.items():
-                input[k] = v.cuda() if isinstance(v, torch.Tensor) else v
+                input[k] = v if isinstance(v, torch.Tensor) else v
             encoder_layer = model(**input)[0]
             pooled_output = pooler(encoder_layer).cpu()
             print(pooled_output.shape)
