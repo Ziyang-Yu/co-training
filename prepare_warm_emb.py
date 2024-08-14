@@ -10,7 +10,7 @@ from p2g.models.gnn.modeling import NonParamPooler
 #from p2g.models.opt.modeling import OPTEmb, OPTHead
 
 
-def get_emb(model, tokenizer, text_list, pooler, padding_length, batch_size=16):
+def get_emb(model, tokenizer, text_list, pooler, padding_length, batch_size=1):
     # encoder_layer = self.model(**input)[0]
     # pooled_output = self.pooler(encoder_layer)
     # return pooled_output
