@@ -17,9 +17,12 @@ import numpy as np
 import dgl
 
 from cotraining import load_data, graphsage, init_dataloader, seed, save_exp
-from cotraining.models import CroppedLlama2, NonParamPooler
-
-
+from cotraining.models import CroppedLlama2, NonParamPooler, mlp
+from fairscale.nn.model_parallel.layers import (
+    #ColumnParallelLinear,
+    ParallelEmbedding,
+    #RowParallelLinear,
+)
 
 def dict_to_namespace(d):
     """
@@ -68,6 +71,13 @@ config = {
     "gnn_num_layers":2,
     "gnn_use_residual": True,
 
+    "bypass_lr": 0.01,
+    "bypass_weight_decay": 0,
+    "bypass_dropout": 0.5,
+    "bypass_requires_grad": True,
+    "bypass_num_layers":2,
+    "bypass_use_residual": True,
+
     "once_batch_size": 1024,
     "once_shuffle": True,
     "once_drop_last": True,
@@ -87,7 +97,7 @@ config = {
     "use_param_free_pooler": True,
     "leading_alpha": 0.9,
     "use_node_cache": True,
-    "node_cache": "../data/tmp/bypass_llama7b_cora/warm_emb.pth",
+    "node_cache": "/home/ubuntu/data/tmp/bypass_llama7b_cora/warm_emb.pth",
 
     "log_dir": "log/exp-name", 
     "save_interval": 5,
@@ -108,8 +118,10 @@ graph = dgl.add_self_loop(graph)
 
 lm = CroppedLlama2.from_pretrained('/home/ubuntu/data/models/Llama-2-7b-hf/').to(torch.half).cuda()
 lm.post_init_crop(23)
-lm_input = torch.load('../data/tmp/bypass_llama7b_cora/cache_layer_23.pth').to(torch.half)
+lm_input = torch.load('/home/ubuntu/data/tmp/bypass_llama7b_cora/warm_emb.pth').to(torch.half)
 model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual).cuda()
+passmodel = mlp(in_channels=config.num_node_features, hidden_channels=config.num_node_features, out_channels=config.num_node_features, num_layers=3).cuda()
+
 
 if config.resume:
     t = loader(model, lm, 'latest')
@@ -126,7 +138,7 @@ if config.use_node_cache:
 
 opt_group = []
 if config.lm_lr > 0.:
-    opt_group.append({'params': lm.parameters(), 'lr': config.lm_lr, "weight_decay": config.lm_weight_decay})
+    opt_group.append({'params': lm.parameters(), 'lr': config.lm_lr, "weight_decay": config.lm_weight_decay})   
     LM_USE_NO_GRAD = False
 else:
     LM_USE_NO_GRAD = True
@@ -136,6 +148,12 @@ if config.gnn_lr > 0:
     GNN_USE_NO_GRAD = False
 else:
     GNN_USE_NO_GRAD = True
+
+if config.bypass_lr > 0:
+    opt_group.append({'params': passmodel.parameters(), 'lr': config.bypass_lr, "weight_decay": config.bypass_weight_decay})
+    PASSMODEL_USE_NO_GRAD = False
+else:
+    PASSMODEL_USE_NO_GRAD = True
 
 assert len(opt_group) > 0, f'no learnable param found'
 opt = torch.optim.Adam(opt_group)
@@ -157,14 +175,22 @@ for epoch in range(100):
             # with torch.no_grad():
             if LM_USE_NO_GRAD:
                 with torch.no_grad():
-                    idx = torch.tensor([i for i in output_nodes])
-                    lm_inputs = lm_input[idx].cuda()
-                    inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
+
+                    idx = torch.tensor([i for i in input_nodes])
+                    inputs = lm_input[idx].cuda()
+                    #iinputs += passmodel([text[i] for i in input_nodes])
+                    #inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             else:
                 idx = torch.tensor([i for i in output_nodes])
                 lm_inputs = lm_input[idx].cuda()
                 inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             # inputs = mfgs[0].srcdata['x']
+
+            if PASSMODEL_USE_NO_GRAD:
+                with torch.no_grad():
+                    inputs += passmodel([text[i] for i in input_nodes])
+            else:
+                inputs += passmodel([text[i] for i in input_nodes])
             if GNN_USE_NO_GRAD:
                 with torch.no_grad():
                     predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
@@ -187,10 +213,10 @@ for epoch in range(100):
 
             del input_nodes, output_nodes, mfgs, inputs, labels, predictions, loss
             torch.cuda.empty_cache()
-    if config.save_interval > 0 and epoch % config.save_interval == 0:
-        saver(model, lm, f'epoch_{epoch}')
-    if config.save_latest:
-        saver(model, lm, 'latest')
+    #if config.save_interval > 0 and epoch % config.save_interval == 0:
+    #    saver(model, lm, f'epoch_{epoch}')
+    #if config.save_latest:
+    #    saver(model, lm, 'latest')
     model.eval()
 
     predictions = []
@@ -198,35 +224,67 @@ for epoch in range(100):
     with torch.no_grad() and tqdm.tqdm(valid_dataloader) as tq, torch.no_grad():
         for input_nodes, output_nodes, mfgs in tq:
 
-            # with torch.no_grad():
-            
-            idx = torch.tensor([i for i in output_nodes])
-            lm_inputs = lm_input[idx].cuda()
-            inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
+            if LM_USE_NO_GRAD:
+                with torch.no_grad():
+
+                    idx = torch.tensor([i for i in input_nodes])
+                    inputs = lm_input[idx].cuda()
+                    #iinputs += passmodel([text[i] for i in input_nodes])
+                    #inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
+            else:
+                idx = torch.tensor([i for i in output_nodes])
+                lm_inputs = lm_input[idx].cuda()
+                inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             # inputs = mfgs[0].srcdata['x']
+
+            if PASSMODEL_USE_NO_GRAD:
+                with torch.no_grad():
+                    inputs += passmodel([text[i] for i in input_nodes])
+            else:
+                inputs += passmodel([text[i] for i in input_nodes])
             labels.append(mfgs[-1].dstdata['y'].cpu().numpy())
-            # predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.valid_batch_size).argmax(1).cpu().numpy())
             predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.valid_batch_size).argmax(1).cpu().numpy())
+            
         predictions = np.concatenate(predictions)
         labels = np.concatenate(labels)
         val_accuracy = sklearn.metrics.accuracy_score(labels, predictions)
         writer.add_scalar('valid/accuracy', val_accuracy, epoch)
         if best_val_accuracy <= val_accuracy:
             best_val_accuracy = val_accuracy
-            saver(model, lm, 'best')
+            #saver(model, lm, 'best')
 
     predictions = []
     labels = []
     with torch.no_grad() and tqdm.tqdm(test_dataloader) as tq, torch.no_grad():
         for input_nodes, output_nodes, mfgs in tq:
-            idx = torch.tensor([i for i in output_nodes])
-            lm_inputs = lm_input[idx].cuda()
-            inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
+
+            if LM_USE_NO_GRAD:
+                with torch.no_grad():
+
+                    idx = torch.tensor([i for i in input_nodes])
+                    inputs = lm_input[idx].cuda()
+                    #iinputs += passmodel([text[i] for i in input_nodes])
+                    #inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
+            else:
+                idx = torch.tensor([i for i in output_nodes])
+                lm_inputs = lm_input[idx].cuda()
+                inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
+            # inputs = mfgs[0].srcdata['x']
+
+            if PASSMODEL_USE_NO_GRAD:
+                with torch.no_grad():
+                    inputs += passmodel([text[i] for i in input_nodes])
+            else:
+                inputs += passmodel([text[i] for i in input_nodes])
+            # inputs = mfgs[0].srcdata['x']
+            # with torch.no_grad():
+
+            #idx = torch.tensor([i for i in output_nodes])
+            #lm_inputs = lm_input[idx].cuda()
+            #inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             # inputs = mfgs[0].srcdata['x']
             labels.append(mfgs[-1].dstdata['y'].cpu().numpy())
-            # inputs = lm(inputs).to(device)
-            predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.test_batch_size).argmax(1).cpu().numpy())
-            # predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.test_batch_size).argmax(1).cpu().numpy())
+            predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.valid_batch_size).argmax(1).cpu().numpy())
         predictions = np.concatenate(predictions)
         # print(predictions)
         labels = np.concatenate(labels)
