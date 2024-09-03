@@ -47,7 +47,7 @@ class History(torch.nn.Module):
 
         elif offset is None or count is None:
             assert n_id.device == self.emb.device
-            self.emb[n_id] = x.to(self.emb.device).detach()
+            self.emb[n_id] = x.to(self.emb.device).detach().to(self.emb.dtype)
 
         else:  # Push in chunks:
             # src_o = 0

@@ -16,7 +16,8 @@ import sklearn
 import numpy as np
 import dgl
 
-from cotraining import load_data, graphsage, deberta, init_dataloader, seed, save_exp
+from cotraining import load_data, graphsage, init_dataloader, seed, save_exp
+from cotraining.models import CroppedLlama2, NonParamPooler
 
 
 
@@ -57,36 +58,36 @@ config = {
     "pooler_dropout": 0.5,
     "pooler_hidden_act": 'relu',
 
-    "num_nodes": 169343,
-    "num_node_features": 768,
-    "gnn_h_feats": 768,
+    "num_nodes": 2708,
+    "num_node_features": 1024,
+    "gnn_h_feats": 1024,
     "gnn_lr": 0.0005,
     "gnn_weight_decay": 0,
     "gnn_dropout": 0.5,
     "gnn_requires_grad": True,
-    "gnn_num_layers":7,
+    "gnn_num_layers":2,
     "gnn_use_residual": True,
 
     "once_batch_size": 1024,
     "once_shuffle": True,
     "once_drop_last": True,
 
-    "train_batch_size": 150,
+    "train_batch_size": 128,
     "train_shuffle": True,
     "train_drop_last": True,
 
-    "valid_batch_size": 16,
+    "valid_batch_size": 128,
     "valid_shuffle": True,
     "valid_drop_last": True,
 
-    "test_batch_size": 16,
+    "test_batch_size": 128,
     "test_shuffle": True,
     "test_drop_last": True,
 
     "use_param_free_pooler": True,
     "leading_alpha": 0.9,
     "use_node_cache": True,
-    "node_cache": "cache/cache_emb.pth",
+    "node_cache": "../data/tmp/bypass_llama7b_cora/warm_emb.pth",
 
     "log_dir": "log/exp-name", 
     "save_interval": 5,
@@ -99,14 +100,16 @@ writer, saver, loader = save_exp(config)
 
 seed(config.seed)
 
-graph, num_classes, text = load_data('ogbn-arxiv', use_dgl=True, use_text=True)
+graph, num_classes, text = load_data('cora', use_dgl=True, use_text=True)
 # graph.ndata['x'] = torch.load('arxiv_deberta.pt').squeeze()
 graph = dgl.to_bidirected(graph, copy_ndata=True)
 graph = dgl.remove_self_loop(graph)
 graph = dgl.add_self_loop(graph)
 
-lm = deberta(config=config).to(config.device)
-model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual).to(config.device)
+lm = CroppedLlama2.from_pretrained('/home/ubuntu/data/models/Llama-2-7b-hf/').to(torch.half).cuda()
+lm.post_init_crop(23)
+lm_input = torch.load('../data/tmp/bypass_llama7b_cora/cache_layer_23.pth').to(torch.half)
+model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual).cuda()
 
 if config.resume:
     t = loader(model, lm, 'latest')
@@ -140,8 +143,8 @@ opt = torch.optim.Adam(opt_group)
 train_dataloader, valid_dataloader, test_dataloader = init_dataloader(graph, 'train', config), init_dataloader(graph, 'val', config), init_dataloader(graph, 'test', config)
 
 best_val_accuracy = 0.
-best_model_path = 'best_deberta_pretrained_graphsage_model.pt'
-best_lm_path = 'best_deberta_pretrained_graphsage_lm.pt'
+#best_model_path = 'best_deberta_pretrained_graphsage_model.pt'
+#best_lm_path = 'best_deberta_pretrained_graphsage_lm.pt'
 
 for epoch in range(100):
     model.train()
@@ -154,9 +157,13 @@ for epoch in range(100):
             # with torch.no_grad():
             if LM_USE_NO_GRAD:
                 with torch.no_grad():
-                    inputs = lm([text[i] for i in output_nodes]).to(config.device)
+                    idx = torch.tensor([i for i in output_nodes])
+                    lm_inputs = lm_input[idx].cuda()
+                    inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             else:
-                inputs = lm([text[i] for i in output_nodes]).to(config.device)
+                idx = torch.tensor([i for i in output_nodes])
+                lm_inputs = lm_input[idx].cuda()
+                inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             # inputs = mfgs[0].srcdata['x']
             if GNN_USE_NO_GRAD:
                 with torch.no_grad():
@@ -192,7 +199,10 @@ for epoch in range(100):
         for input_nodes, output_nodes, mfgs in tq:
 
             # with torch.no_grad():
-            inputs = lm([text[i] for i in output_nodes]).to(config.device)
+            
+            idx = torch.tensor([i for i in output_nodes])
+            lm_inputs = lm_input[idx].cuda()
+            inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             # inputs = mfgs[0].srcdata['x']
             labels.append(mfgs[-1].dstdata['y'].cpu().numpy())
             # predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.valid_batch_size).argmax(1).cpu().numpy())
@@ -209,7 +219,9 @@ for epoch in range(100):
     labels = []
     with torch.no_grad() and tqdm.tqdm(test_dataloader) as tq, torch.no_grad():
         for input_nodes, output_nodes, mfgs in tq:
-            inputs = lm([text[i] for i in output_nodes]).to(config.device)
+            idx = torch.tensor([i for i in output_nodes])
+            lm_inputs = lm_input[idx].cuda()
+            inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             # inputs = mfgs[0].srcdata['x']
             labels.append(mfgs[-1].dstdata['y'].cpu().numpy())
             # inputs = lm(inputs).to(device)
