@@ -17,12 +17,14 @@ import numpy as np
 import dgl
 
 from cotraining import load_data, graphsage, init_dataloader, seed, save_exp
-from cotraining.models import CroppedLlama2, NonParamPooler, mlp
+from cotraining.models import CroppedLlama2, NonParamPooler, llama
 from fairscale.nn.model_parallel.layers import (
     #ColumnParallelLinear,
     ParallelEmbedding,
     #RowParallelLinear,
 )
+#from transformers.models.llama import LlamaConfig
+#from transformers.models.llama import LlamaModel 
 
 def dict_to_namespace(d):
     """
@@ -75,22 +77,22 @@ config = {
     "bypass_weight_decay": 0,
     "bypass_dropout": 0.5,
     "bypass_requires_grad": True,
-    "bypass_num_layers":2,
+    "bypass_num_layers":1,
     "bypass_use_residual": True,
 
     "once_batch_size": 1024,
     "once_shuffle": True,
     "once_drop_last": True,
 
-    "train_batch_size": 128,
+    "train_batch_size": 2,
     "train_shuffle": True,
     "train_drop_last": True,
 
-    "valid_batch_size": 128,
+    "valid_batch_size": 8,
     "valid_shuffle": True,
     "valid_drop_last": True,
 
-    "test_batch_size": 128,
+    "test_batch_size": 8,
     "test_shuffle": True,
     "test_drop_last": True,
 
@@ -120,7 +122,9 @@ lm = CroppedLlama2.from_pretrained('/home/ubuntu/data/models/Llama-2-7b-hf/').to
 lm.post_init_crop(23)
 lm_input = torch.load('/home/ubuntu/data/tmp/bypass_llama7b_cora/warm_emb.pth').to(torch.half)
 model = graphsage(num_layers=config.gnn_num_layers, num_nodes=config.num_nodes, in_feats=config.num_node_features, h_feats=config.gnn_h_feats, num_classes=num_classes, dropout=config.gnn_dropout, alpha=config.leading_alpha, use_residual=config.gnn_use_residual).cuda()
-passmodel = mlp(in_channels=config.num_node_features, hidden_channels=config.num_node_features, out_channels=config.num_node_features, num_layers=3).cuda()
+#passmodel = mlp(in_channels=config.num_node_features, hidden_channels=config.num_node_features, out_channels=config.num_node_features, num_layers=3).cuda()
+#passmodel_config = LlamaConfig(num_hidden_layers=config.bypass_num_layers)
+passmodel = llama(num_hidden_layers=config.bypass_num_layers).cuda()
 
 
 if config.resume:
@@ -168,7 +172,10 @@ for epoch in range(100):
     model.train()
 
     with tqdm.tqdm(train_dataloader) as tq:
+
+        #print('Start llm fetching')
         for step, (input_nodes, output_nodes, mfgs) in enumerate(tq):
+            #print('Start llm fetching')
             # print(output_nodes)
             # inputs = [text[i] for i in output_nodes]
             labels = mfgs[-1].dstdata['y']
@@ -185,12 +192,16 @@ for epoch in range(100):
                 lm_inputs = lm_input[idx].cuda()
                 inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             # inputs = mfgs[0].srcdata['x']
-
+            #print('Start llama forward')
             if PASSMODEL_USE_NO_GRAD:
                 with torch.no_grad():
                     inputs += passmodel([text[i] for i in input_nodes])
             else:
+                #print(inputs.shape)
+                
                 inputs += passmodel([text[i] for i in input_nodes])
+
+            #print('Start gnn forward')
             if GNN_USE_NO_GRAD:
                 with torch.no_grad():
                     predictions = model(mfgs=mfgs, x=inputs, batch_size=config.train_batch_size)
