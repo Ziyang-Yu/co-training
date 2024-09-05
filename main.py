@@ -73,7 +73,7 @@ config = {
     "gnn_num_layers":2,
     "gnn_use_residual": True,
 
-    "bypass_lr": 0.01,
+    "bypass_lr": 0.001,
     "bypass_weight_decay": 0,
     "bypass_dropout": 0.5,
     "bypass_requires_grad": True,
@@ -84,15 +84,15 @@ config = {
     "once_shuffle": True,
     "once_drop_last": True,
 
-    "train_batch_size": 2,
+    "train_batch_size": 32,
     "train_shuffle": True,
     "train_drop_last": True,
 
-    "valid_batch_size": 8,
+    "valid_batch_size": 32,
     "valid_shuffle": True,
     "valid_drop_last": True,
 
-    "test_batch_size": 8,
+    "test_batch_size": 32,
     "test_shuffle": True,
     "test_drop_last": True,
 
@@ -168,7 +168,7 @@ best_val_accuracy = 0.
 #best_model_path = 'best_deberta_pretrained_graphsage_model.pt'
 #best_lm_path = 'best_deberta_pretrained_graphsage_lm.pt'
 
-for epoch in range(100):
+for epoch in range(config.epoch):
     model.train()
 
     with tqdm.tqdm(train_dataloader) as tq:
@@ -193,13 +193,16 @@ for epoch in range(100):
                 inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             # inputs = mfgs[0].srcdata['x']
             #print('Start llama forward')
+            #print(input_nodes)
+            #print(output_nodes)
+            #raise NotImplementedError
             if PASSMODEL_USE_NO_GRAD:
                 with torch.no_grad():
-                    inputs += passmodel([text[i] for i in input_nodes])
+                    inputs[:output_nodes.shape[0], :] = passmodel([text[i] for i in output_nodes]).half()
             else:
                 #print(inputs.shape)
                 
-                inputs += passmodel([text[i] for i in input_nodes])
+                inputs[:output_nodes.shape[0], :] = passmodel([text[i] for i in output_nodes]).half()
 
             #print('Start gnn forward')
             if GNN_USE_NO_GRAD:
@@ -248,11 +251,10 @@ for epoch in range(100):
                 inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             # inputs = mfgs[0].srcdata['x']
 
-            if PASSMODEL_USE_NO_GRAD:
-                with torch.no_grad():
-                    inputs += passmodel([text[i] for i in input_nodes])
-            else:
-                inputs += passmodel([text[i] for i in input_nodes])
+            
+                #print(inputs.shape)
+
+            inputs[:output_nodes.shape[0], :] = passmodel([text[i] for i in output_nodes]).half()
             labels.append(mfgs[-1].dstdata['y'].cpu().numpy())
             predictions.append(model(mfgs=mfgs, x=inputs, batch_size=config.valid_batch_size).argmax(1).cpu().numpy())
             
@@ -282,11 +284,7 @@ for epoch in range(100):
                 inputs = lm(inputs_embeds=lm_inputs, use_cache=False)
             # inputs = mfgs[0].srcdata['x']
 
-            if PASSMODEL_USE_NO_GRAD:
-                with torch.no_grad():
-                    inputs += passmodel([text[i] for i in input_nodes])
-            else:
-                inputs += passmodel([text[i] for i in input_nodes])
+            inputs[:output_nodes.shape[0], :] = passmodel([text[i] for i in output_nodes]).half()
             # inputs = mfgs[0].srcdata['x']
             # with torch.no_grad():
 
